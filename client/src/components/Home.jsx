@@ -1,0 +1,40 @@
+import React from 'react';
+import { Link } from 'react-router-dom';
+
+export default function Home() {
+    return (
+
+        <div className='h-full w-full flex flex-col justify-around text-white items-center md:py-16 py-32'>
+            <div className='flex flex-col items-center gap-6'>
+                <div className='lg:text-5xl text-4xl font-semibold text-center'>
+                    Simplify your fitness goals
+                </div>
+                <div>
+                    <Link to='/signup' className='pr-3 hover:text-alloy-orange'>
+                        REGISTER
+                    </Link>
+                    <Link to='/login' className='border border-alloy-orange rounded-2xl px-4 py-2 hover:text-alloy-orange'>
+                        LOGIN 
+                    </Link>
+                </div>
+            </div>
+
+            <div className='flex md:flex-row flex-col md:gap-32 sm:gap-20 gap-10 text-center px-10'>
+                    <div className="flex flex-col items-center">
+                        <i class="fa-regular fa-circle-check fa-4x text-white"></i>
+                        <div className='text-xl'>Keep <span className='text-alloy-orange font-bold'>track</span> of your personal bests</div>
+                    </div>
+                    <div className="flex flex-col items-center">
+                        <i class="fa-regular fa-rectangle-list fa-4x"></i>
+                        <div className='text-xl'>Keep <span className='text-alloy-orange font-bold'>inventory</span> of all your workouts</div>
+                    </div>
+                    <div className="flex flex-col items-center">
+                        <i class="fa-regular fa-comment fa-4x"></i>
+                        <div className='text-xl'>Share wins with the <span className='text-alloy-orange font-bold'>community</span></div>
+                    </div>
+                </div>
+            
+        </div>
+
+    )
+}

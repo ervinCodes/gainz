@@ -57,7 +57,7 @@ export default function Login() {
       {errors.map((err, i) => {
           return <span key='{i}' className='text-red-600'>{err}</span>
         })}
-      <form className="mt-4 border border-black rounded-lg p-4 md:w-[400px] w-full">
+      <form className="mt-4 border border-black rounded-lg p-4 md:w-[400px] w-full text-white bg-black shadow-lg shadow-dun">
         <div className='text-2xl font-semibold pb-5'>Sign In</div>
         <div className="mb-3 flex flex-col">
           <label for="exampleInputEmail1" className="form-label">Email address</label>
@@ -80,7 +80,7 @@ export default function Login() {
               onChange={handlePassword}
           ></input>
         </div>
-        <button onClick={handleSubmit} type="submit" className="p-2 bg-black text-white hover:text-black hover:bg-gray-700 rounded-lg">Submit</button>
+        <button onClick={handleSubmit} type="submit" className="border border-alloy-orange rounded-2xl px-4 py-2 hover:bg-alloy-orange">SUBMIT</button>
       </form>
     </div>
       

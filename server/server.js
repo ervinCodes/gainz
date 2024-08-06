@@ -25,16 +25,15 @@ const allowedOrigins = [
 ];
 
 const corsOptions = {
-  origin: function (origin, callback) {
-      console.log('Origin:', origin); // Add this line to debug the origin
+    origin: function (origin, callback) {
+    console.log('Origin:', origin); // Add this line to debug the origin
       if (allowedOrigins.includes(origin) || !origin) {
-          callback(null, true);
+        callback(null, true);
       } else {
-          console.log('Not allowed by CORS:', origin); // Add this line to debug rejected origins
-          callback(new Error('Not allowed by CORS'));
+        callback(new Error('Not allowed by CORS'));
       }
-  },
-  credentials: true
+    },
+    credentials: true
 };
 
 app.use(cors(corsOptions));
@@ -54,15 +53,11 @@ app.use(
         saveUninitialized: false,
         store: new MongoStore({ mongooseConnection: mongoose.connection }),
         cookie: {
-            sameSite: "none",
+            secure: process.env.NODE_ENV === 'production', // Use secure cookies in production
+            maxAge: 24 * 60 * 60 * 1000 // 1 day
         }
     })
 );
-
-app.use((req, res, next) => {
-  console.log('Session Cookies', req.cookies);
-  next();
-})
 
 // Passport middleware
 app.use(passport.initialize());
@@ -73,6 +68,6 @@ app.use("/", mainRoutes);
 
 // Server Running
 app.listen(process.env.PORT, () => {
-    console.log("Server is runningon PORT 5050");
+    console.log("Server is running on PORT 5051");
 });
   

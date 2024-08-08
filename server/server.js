@@ -54,10 +54,11 @@ app.use(
         saveUninitialized: false,
         store: new MongoStore({ mongooseConnection: mongoose.connection }),
         cookie: {
+            httpOnly: true,
             secure: true,
             maxAge: 24 * 60 * 60 * 1000, // 1 day
             sameSite: 'none',
-            domain: 'www.gainzfitapp.com/'
+            domain: 'www.gainzfitapp.com'
         }
     })
 );

@@ -21,7 +21,8 @@ connectDB();
 // Allow CORS for multiple origins
 const allowedOrigins = [
     'http://localhost:5173', // Your local development URL
-    'https://www.gainzfitapp.com' // Replace with your Vercel deployment URL
+    'https://www.gainzfitapp.com', // Your server URL
+    'https://gainz-three.vercel.app' // Your client URL
 ];
 
 const corsOptions = {

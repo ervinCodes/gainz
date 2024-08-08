@@ -54,8 +54,10 @@ app.use(
         saveUninitialized: false,
         store: new MongoStore({ mongooseConnection: mongoose.connection }),
         cookie: {
-            secure: process.env.NODE_ENV === 'production', // Use secure cookies in production
-            maxAge: 24 * 60 * 60 * 1000 // 1 day
+            secure: true,
+            maxAge: 24 * 60 * 60 * 1000, // 1 day
+            sameSite: 'none',
+            domain: 'www.gainzfitapp.com/'
         }
     })
 );

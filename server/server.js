@@ -21,8 +21,8 @@ connectDB();
 // Allow CORS for multiple origins
 const allowedOrigins = [
     'http://localhost:5173', // Your local development URL
-    'https://www.gainzfitapp.com', // Your client URL
-    'https://api.gainzfitapp.com/' // Your server URL
+    'https://www.gainzfitapp.com', // Replace with your Vercel deployment URL
+    'https://api.gainzfitapp.com'
 ];
 
 const corsOptions = {
@@ -54,11 +54,8 @@ app.use(
         saveUninitialized: false,
         store: new MongoStore({ mongooseConnection: mongoose.connection }),
         cookie: {
-            httpOnly: true,
-            secure: true,
-            maxAge: 24 * 60 * 60 * 1000, // 1 day
-            sameSite: 'none',
-            domain: 'www.gainzfitapp.com'
+            secure: process.env.NODE_ENV === 'production', // Use secure cookies in production
+            maxAge: 24 * 60 * 60 * 1000 // 1 day
         }
     })
 );

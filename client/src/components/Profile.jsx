@@ -70,7 +70,7 @@ export default function Profile() {
 
     return (
         <div className='flex flex-col justify-center items-center h-full gap-5'>
-            <div>
+            <div className='text-white'>
                 Welcome {userName}!
             </div>
             <div>

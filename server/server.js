@@ -55,7 +55,6 @@ app.use(
         store: new MongoStore({ mongooseConnection: mongoose.connection }),
         cookie: {
           sameSite: 'none',
-          secure: true,
         }
     })
 );

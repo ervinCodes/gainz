@@ -54,10 +54,7 @@ app.use(
         saveUninitialized: false,
         store: new MongoStore({ mongooseConnection: mongoose.connection }),
         cookie: {
-          sameSite: none
-          // httpOnly: false, // Set to true for security
-          // secure: true,   // Ensures cookies are sent over HTTPS
-          // sameSite: "strict" // Allows cross-site cookies; ensure 'secure: true' is also set
+          sameSite: none,
         }
     })
 );

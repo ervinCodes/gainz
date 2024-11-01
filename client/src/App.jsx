@@ -5,11 +5,16 @@ import './css/App.css';
 
 const App = () => {
   return (
-    <div className="h-full">
-      <Navbar />
-      <Outlet />
-      <Footer />
+    <>
+    <div className="h-full flex flex-col justify-between">
+        <Navbar />
+          <div className="flex-1 overflow-y-auto">
+            <Outlet />
+          </div>
+        <Footer />
     </div>
+
+    </>
   );
 };
 

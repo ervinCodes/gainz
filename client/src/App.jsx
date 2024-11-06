@@ -8,7 +8,7 @@ const App = () => {
     <>
     <div className="h-full flex flex-col justify-between">
         <Navbar />
-          <div className="flex-1 overflow-y-auto">
+          <div className="overflow-y-auto">
             <Outlet />
           </div>
         <Footer />

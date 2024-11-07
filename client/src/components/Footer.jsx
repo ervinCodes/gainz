@@ -2,7 +2,7 @@ import {React} from 'react';
 
 export default function Footer() {
     return (
-        <footer className='w-full bottom-0 z-50 text-white flex flex-col items-center gap-3 pt-10'>
+        <footer className='w-full bottom-0 z-50 text-white flex flex-col items-center gap-3 pt-16'>
             <div className="flex flex-row gap-3">
                 <a href='https://www.linkedin.com/in/ervindev/' target='_blank'>
                     <img src='/images/linkedin.png' className='h-10 w-auto'></img>

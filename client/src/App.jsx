@@ -10,8 +10,9 @@ const App = () => {
         <Navbar />
           <div className="overflow-y-auto h-full xs:pt-52 sm:pt-0">
             <Outlet />
+            <Footer />
           </div>
-        <Footer />
+        
     </div>
 
     </>

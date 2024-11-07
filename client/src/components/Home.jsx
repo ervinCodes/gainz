@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 export default function Home() {
     return (
 
-        <div className='w-full h-full flex flex-col justify-around text-white items-center md:py-16 sm:py-28 xs:py-64'>
+        <div className='w-full h-full flex flex-col justify-around text-white items-center md:py-16 sm:py-28 xs:py-16'>
             <div className='flex flex-col items-center gap-6'>
                 <div className='lg:text-5xl text-4xl font-semibold text-center'>
                     Simplify your fitness goals

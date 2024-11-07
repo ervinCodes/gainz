@@ -6,9 +6,9 @@ import './css/App.css';
 const App = () => {
   return (
     <>
-    <div className="h-full flex flex-col justify-between">
+    <div className="h-full flex flex-col">
         <Navbar />
-          <div className="overflow-y-auto h-full py-20">
+          <div className="overflow-y-auto h-full mt-20">
             <Outlet />
           </div>
         <Footer />

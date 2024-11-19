@@ -1,9 +1,34 @@
 import { NavLink } from 'react-router-dom';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+
+const appUrl = import.meta.env.VITE_APP_API_URL;
 
 export default function Navbar() {
 
     const [toggler, setToggler] = useState(false)
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+    useEffect(() => {
+        // Simulate checking the user's authentication status
+        const checkAuthStatus = async () => {
+            try {
+                const response = await fetch(`${appUrl}/profile`, {
+                    credentials: 'include'
+                });
+                if(response.ok) {
+                    setIsLoggedIn(true); // User is authenticated
+                } else {
+                    setIsLoggedIn(false); // Not authenticated
+                }
+            }
+            catch (error) {
+                console.error('Error checking auth status:', error);
+                setIsLoggedIn(false);
+            }
+        };
+        checkAuthStatus();
+    }, []);
+    
 
     return (
   
@@ -20,7 +45,7 @@ export default function Navbar() {
                         </div>
                         {/* Col 2 */}
                         <div className={`list-none ${toggler ? 'flex' : 'hidden'} md:flex md:flex-row flex-col gap-4 justify-center items-center`}>
-                            <NavLink to='/'>
+                            <NavLink to={isLoggedIn ? '/profile' : '/'}>
                                 Home
                             </NavLink>
                             <NavLink to='/about'>

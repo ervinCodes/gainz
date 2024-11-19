@@ -10,6 +10,7 @@ import About from './components/About.jsx';
 import Signup from './components/Signup';
 import Login from './components/Login';
 import Profile from './components/Profile';
+import CreateWorkout from './components/CreateWorkout.jsx';
 import './css/index.css'
 
 const router = createBrowserRouter([
@@ -36,6 +37,10 @@ const router = createBrowserRouter([
       {
         path: '/profile',
         element: <Profile />
+      },
+      {
+        path: '/createWorkout',
+        element: <CreateWorkout />
       }
     ]
   },

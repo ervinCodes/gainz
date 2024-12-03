@@ -8,7 +8,7 @@ export default function CreateWorkout() {
 
     const [workoutTitle, setWorkoutTitle] = useState(''); // State to store the title of the workout
     const [exercises, setExercises] = useState([ // State to hold a list of exercises; each exercise includes name, sets, reps, and weight
-        { name: '', sets: 0},
+        { name: '', sets: 0, reps: 0 },
     ]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -39,7 +39,7 @@ export default function CreateWorkout() {
 
     // Function to add a new exercise row with default values (empty name, 0 sets)
     const handleAddExercise = () => {
-        setExercises([...exercises, { name: '', sets: 0}])
+        setExercises([...exercises, { name: '', sets: 0, reps: 0,}])
     }
 
     // Function to update the value of a specific field (e.g., name, sets)
@@ -63,16 +63,47 @@ export default function CreateWorkout() {
     }
 
     const handleSubmit = () => {
+
+        if(workoutTitle === '') {
+            setError('Workout name is required');
+            return;
+        }
+
+        if(!Array.isArray(exercises) || exercises.some(exercises => !exercises.name || exercises.sets <= 0 || exercises.reps <= 0)) {
+            setError('All exercises must have a valid name, sets, and reps');
+            return;
+        }
+
+        setError(null); // Clears any previous errors
+
         const workoutData = { title: workoutTitle, exercises }; // Create an object with the workout title and exercises
 
-        console.log('Workout Submitted:', workoutData)
-        // sent data to backend here
+        console.log('Workout Submitted:', workoutData) // Log for debugging
+
+        // Send data to backend 
+        fetch(`${appUrl}/createWorkout`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(workoutData), // Convert the workout data to JSON
+            credentials: 'include',
+        })
+            .then(response => {
+                if(!response.ok) {
+                    throw new Error('Failed to save workout');
+                }
+                return response.json();
+            })
+            .then(result => {
+                console.log("Workout saved succesfully:", result);
+                navigate('/myworkouts') // redirect to profile, but after workout is saved redirect to new page
+            })
+            .catch(err => {
+                console.error("Error saving workout:", error);
+            });
     }
 
-      // Error messages
-    if (error) {
-        return <div className="text-white">Error: {error}</div>;
-    }
 
     if (loading) {
         return <div className="text-white">Loading...</div>;
@@ -81,6 +112,8 @@ export default function CreateWorkout() {
     return (
         <>
             <div className="h-full flex flex-col justify-center items-center space-y-4">
+            {/* Displays error if one exists */}
+            {error && <div className="text-red-600 font-bold">{error}</div>}
             <input
                 type="text"
                 value={workoutTitle}
@@ -103,6 +136,7 @@ export default function CreateWorkout() {
                             className="border border-gray-400 px-2 py-1 rounded"
                             />
                         </div>
+                        
                         <div className='flex flex-col'>
                             <div className="text-white">Sets</div>
                             <input
@@ -110,6 +144,18 @@ export default function CreateWorkout() {
                                 value={exercise.sets}
                                 onChange={(e) => handleExerciseChange(index, "sets", e.target.value)}
                                 className="border border-gray-400 px-2 py-1 rounded"
+                            />
+                        </div>
+
+                        <div className='flex flex-col'>
+                            <div className="text-white">Reps</div>
+                            <input
+                            type="number"
+                            value={exercise.reps}
+                            onChange={(e) =>
+                            handleExerciseChange(index, "reps", e.target.value)
+                            }
+                            className="border border-gray-400 px-2 py-1 rounded"
                             />
                         </div>
                         {/* Delete Workout */}

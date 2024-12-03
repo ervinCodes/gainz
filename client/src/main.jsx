@@ -11,6 +11,7 @@ import Signup from './components/Signup';
 import Login from './components/Login';
 import Profile from './components/Profile';
 import CreateWorkout from './components/CreateWorkout.jsx';
+import MyWorkouts from './components/MyWorkouts.jsx';
 import './css/index.css'
 
 const router = createBrowserRouter([
@@ -41,6 +42,10 @@ const router = createBrowserRouter([
       {
         path: '/createWorkout',
         element: <CreateWorkout />
+      },
+      {
+        path: '/myworkouts',
+        element: <MyWorkouts />
       }
     ]
   },

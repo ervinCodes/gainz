@@ -41,6 +41,29 @@ export default function MyWorkouts() {
 
     }, [navigate]);
 
+    // Retrieves users workouts from the server
+    useEffect(() => {
+        async function getWorkouts() {
+            try {
+                const response = await fetch(`${appUrl}/getWorkouts`, {
+                    credentials: 'include',
+                })
+
+                if(!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`)
+                }
+
+                const data = await response.json();
+    
+                console.log('User workouts', data.workouts);
+            } catch (err) {
+                console.error('Error fetching workouts', err)
+            }
+            
+        }
+        getWorkouts();
+    }, [])
+
 
     return (
         <>

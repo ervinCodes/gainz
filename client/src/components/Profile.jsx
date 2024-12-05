@@ -58,21 +58,20 @@ export default function Profile() {
       .catch((err) => console.error(err));
   }
 
-  // Error messages
-  if (error) {
-    return <div className="text-white">Error: {error}</div>;
-  }
-
+  // Loading message
   if (loading) {
     return <div className="text-white">Loading...</div>;
   }
 
   return (
     <div className="flex flex-col justify-center items-center h-full gap-5">
+      {/* Error message */}
+      {error && <div className="text-red-600 font-bold">{error}</div>}
+
       <div className="text-white">Welcome {userName}!</div>
 
       <Link to='/createWorkout' className="text-white border border-alloy-orange rounded-2xl px-4 py-2 hover:text-alloy-orange">Create a Workout</Link>
-      <div className="text-white">My Workouts</div>
+      <Link to='/myworkouts' className="text-white border border-alloy-orange rounded-2xl px-4 py-2 hover:text-alloy-orange">My Workouts</Link>
       <div className="text-white">Diary</div>
 
       {/* Logout */}

@@ -16,7 +16,8 @@ module.exports = {
         }
     },
     postWorkout: async (req, res) => {
-        console.log(req.body)
+        console.log("Request Body", req.body)
+
         try {
             // Validate incoming data
             const { title, workoutData } = req.body;
@@ -26,10 +27,12 @@ module.exports = {
 
             // Create the workout
             const newWorkout = await Workouts.create({
+                userId: req.user.id,
                 title,
                 exercises: workoutData,
             });
-            console.log(newWorkout)
+
+            console.log('New Workout Created', newWorkout)
 
             // Respond with success and created workout
             res.status(201).json({ message: "Workout created successfully", newWorkout })
@@ -37,6 +40,24 @@ module.exports = {
         } catch (err) {
             console.log(err)
             res.status(500).json({ message: "Server Error" })
+        }
+    },
+    getWorkouts: async (req, res) => {
+        try {
+            // Ensures the user is authenticated
+            const userId = req.user.id
+
+            // Find workouts associated with the logged-in user
+            const userWorkouts = await Workouts.find({
+                userId
+            })
+
+            // Send the workouts to the client
+            res.status(200).json({ workouts: userWorkouts })
+
+        } catch (err) {
+            console.error('Error fetching workouts', err)
+            res.status(500).json({ message: 'Server Error' })
         }
     }
 };

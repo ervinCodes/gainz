@@ -76,7 +76,7 @@ export default function CreateWorkout() {
 
         setError(null); // Clears any previous errors
 
-        const workoutData = { title: workoutTitle, exercises }; // Create an object with the workout title and exercises
+        const workoutData = { title: workoutTitle, workoutData: exercises }; // Create an object with the workout title and exercises
 
         console.log('Workout Submitted:', workoutData) // Log for debugging
 
@@ -124,7 +124,7 @@ export default function CreateWorkout() {
 
             {exercises.map((exercise, index) => (
                 <div key={index} className="flex flex-row items-center gap-5">
-                    
+                        {/* Title */}
                         <div className='flex flex-col'>
                             <div className="text-white">Exercise Name</div>
                             <input
@@ -136,7 +136,7 @@ export default function CreateWorkout() {
                             className="border border-gray-400 px-2 py-1 rounded"
                             />
                         </div>
-                        
+                        {/* Sets */}
                         <div className='flex flex-col'>
                             <div className="text-white">Sets</div>
                             <input
@@ -146,7 +146,7 @@ export default function CreateWorkout() {
                                 className="border border-gray-400 px-2 py-1 rounded"
                             />
                         </div>
-
+                        {/* Reps */}
                         <div className='flex flex-col'>
                             <div className="text-white">Reps</div>
                             <input

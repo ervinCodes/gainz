@@ -2,6 +2,7 @@ import { Outlet } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import './css/App.css';
+import './css/reset.css';
 
 const App = () => {
   return (

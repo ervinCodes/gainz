@@ -26,7 +26,7 @@ const ExerciseSchema = new mongoose.Schema({
 
 // Define a schema for a workout that includes multiple exercises
 const WorkoutSchema = new mongoose.Schema({
-    user: { 
+    userId: { 
         type: mongoose.Schema.Types.ObjectId, 
         ref: "User",
         required: true 

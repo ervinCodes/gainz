@@ -6,6 +6,9 @@ const appUrl = import.meta.env.VITE_APP_API_URL;
 export default function CreateWorkout() {
     let navigate = useNavigate();
 
+
+
+
     const [workoutTitle, setWorkoutTitle] = useState(''); // State to store the title of the workout
     const [exercises, setExercises] = useState([ // State to hold a list of exercises; each exercise includes name, sets, reps, and weight
         { name: '', sets: 0, reps: 0 },
@@ -13,7 +16,10 @@ export default function CreateWorkout() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
-      // fetches data from the server with credentials and retrieves username and email
+
+
+
+    // fetches data from the server with credentials and retrieves username and email
     useEffect(() => {
         fetch(`${appUrl}/profile`, {
         credentials: "include", // Ensures cookies are sent with the request
@@ -37,10 +43,16 @@ export default function CreateWorkout() {
         });
     }, [navigate]);
 
+
+
+
     // Function to add a new exercise row with default values (empty name, 0 sets)
     const handleAddExercise = () => {
         setExercises([...exercises, { name: '', sets: 0, reps: 0,}])
     }
+
+
+
 
     // Function to update the value of a specific field (e.g., name, sets)
     // for a specific exercise identified by its index
@@ -51,10 +63,16 @@ export default function CreateWorkout() {
 
     };
 
+
+
+
     // Function to handle changes to the workout title input field
     const handleWorkoutTitleChange = (e) => {
         setWorkoutTitle(e.target.value) // Update the state with the new workout title
     }
+
+
+
 
     const handleDeleteExercise = (index) => {
         const newExercises = [...exercises]
@@ -62,8 +80,10 @@ export default function CreateWorkout() {
         setExercises(newExercises)
     }
 
-    const handleSubmit = () => {
 
+
+
+    const handleSubmit = () => {
         if(workoutTitle === '') {
             setError('Workout name is required');
             return;
@@ -103,6 +123,9 @@ export default function CreateWorkout() {
                 console.error("Error saving workout:", error);
             });
     }
+
+
+
 
 
     if (loading) {

@@ -6,6 +6,9 @@ const appUrl = import.meta.env.VITE_APP_API_URL;
 export default function MyWorkouts() {
     const navigate = useNavigate();
 
+
+
+
     // create state variables
     const [title, setTitle] = useState('');
     const [exercises, setExercises] = useState([
@@ -17,36 +20,14 @@ export default function MyWorkouts() {
         }
     ])
 
-    // validate user and retrieve workout data
-    useEffect(() => {
-        async function validateUser() {
-            try {
-                const response = await fetch(`${appUrl}/profile`, {
-                credentials: 'include' // Ensures cookies are sent with the request
-                })
 
-                if(!response.ok || response.redirect) {
-                    throw new Error('Unauthorized Access ');
-                }
-
-                await response.json() // Parse the response if needed
-
-            } catch (error) {
-            console.error('Error validating user:', error)
-            navigate('/login') // Redirect to login on failure
-            } 
-        }
-
-        validateUser();
-
-    }, [navigate]);
 
     // Retrieves users workouts from the server
     useEffect(() => {
         async function getWorkouts() {
             try {
                 const response = await fetch(`${appUrl}/getWorkouts`, {
-                    credentials: 'include',
+                    credentials: 'include', // Send credentials to validate the user
                 })
 
                 if(!response.ok) {
@@ -55,7 +36,9 @@ export default function MyWorkouts() {
 
                 const data = await response.json();
     
-                console.log('User workouts', data.workouts);
+                console.log('User workouts', data.workouts); // Log the retreved workouts
+                setExercises(data.workouts)
+
             } catch (err) {
                 console.error('Error fetching workouts', err)
             }

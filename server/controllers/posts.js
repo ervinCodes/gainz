@@ -1,6 +1,7 @@
 // const cloudinary = require("../middleware/cloudinary");
 const { ObjectId } = require("mongodb");
-const Workouts = require('../models/Workouts')
+const Workouts = require('../models/Workouts');
+const User = require("../models/User");
 
 module.exports = {
     getProfile: async (req, res) => {
@@ -17,8 +18,19 @@ module.exports = {
     },
     postWorkout: async (req, res) => {
         console.log("Request Body", req.body)
+        console.log("User:", req.user)
 
         try {
+
+            //Ensure the user is logged in and retrieve their ID
+            const userId = req.user?.id;
+
+            if(!userId) {
+                return res.status(401).json({ message: 'Unauthorized' })
+            }
+
+            const user = req.user._id;
+
             // Validate incoming data
             const { title, workoutData } = req.body;
             if(!title || !Array.isArray(workoutData)) {
@@ -27,7 +39,7 @@ module.exports = {
 
             // Create the workout
             const newWorkout = await Workouts.create({
-                userId: req.user.id,
+                userId: userId, // Associates workout with logged-in user
                 title,
                 exercises: workoutData,
             });
@@ -49,9 +61,9 @@ module.exports = {
 
             // Find workouts associated with the logged-in user
             const userWorkouts = await Workouts.find({
-                userId
+                userId: userId
             })
-
+            console.log(userId)
             // Send the workouts to the client
             res.status(200).json({ workouts: userWorkouts })
 
@@ -63,3 +75,5 @@ module.exports = {
 };
 
 
+// TODO
+// Workout successfully saved, but the mongoDB collection has the exercise array as empty (look into why its not saving the details)

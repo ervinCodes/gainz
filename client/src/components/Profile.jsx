@@ -72,10 +72,10 @@ export default function Profile() {
 
       <Link to='/createWorkout' className="text-white border border-alloy-orange rounded-2xl px-4 py-2 hover:text-alloy-orange">Create a Workout</Link>
       <Link to='/myworkouts' className="text-white border border-alloy-orange rounded-2xl px-4 py-2 hover:text-alloy-orange">My Workouts</Link>
-      <div className="text-white">Diary</div>
+      {/* <div className="text-white">Diary</div> */}
 
       {/* Logout */}
-      <div>
+      <div className="mt-2">
         <a
           onClick={handleLogout}
           className="p-3 rounded-2xl bg-red-600 hover:cursor-pointer"

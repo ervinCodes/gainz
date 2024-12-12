@@ -32,8 +32,8 @@ module.exports = {
             const user = req.user._id;
 
             // Validate incoming data
-            const { title, workoutData } = req.body;
-            if(!title || !Array.isArray(workoutData)) {
+            const { title, exercises } = req.body;
+            if(!title || !Array.isArray(exercises)) {
                 return res.status(400).json({ message: "Invalid data provided" })
             }
 
@@ -41,7 +41,7 @@ module.exports = {
             const newWorkout = await Workouts.create({
                 userId: userId, // Associates workout with logged-in user
                 title,
-                exercises: workoutData,
+                exercises: exercises,
             });
 
             console.log('New Workout Created', newWorkout)
@@ -60,12 +60,12 @@ module.exports = {
             const userId = req.user.id
 
             // Find workouts associated with the logged-in user
-            const userWorkouts = await Workouts.find({
+            const userWorkout = await Workouts.find({
                 userId: userId
             })
-            console.log(userId)
+            
             // Send the workouts to the client
-            res.status(200).json({ workouts: userWorkouts })
+            res.status(200).json({ workout: userWorkout })
 
         } catch (err) {
             console.error('Error fetching workouts', err)
@@ -76,4 +76,4 @@ module.exports = {
 
 
 // TODO
-// Workout successfully saved, but the mongoDB collection has the exercise array as empty (look into why its not saving the details)
+// On MyWorkouts.jsx: Search through database and populate the data onto the page, the data is in array format (FYI)

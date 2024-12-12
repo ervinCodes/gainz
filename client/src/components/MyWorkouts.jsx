@@ -36,8 +36,11 @@ export default function MyWorkouts() {
 
                 const data = await response.json();
     
-                console.log('User workouts', data.workouts); // Log the retreved workouts
-                setExercises(data.workouts)
+                console.log('User workout', data.workout); // Log the retreved workouts
+
+                setTitle(data.workout.title)
+                console.log(data.title)
+                setExercises(data.workout)
 
             } catch (err) {
                 console.error('Error fetching workouts', err)
@@ -47,11 +50,14 @@ export default function MyWorkouts() {
         getWorkouts();
     }, [])
 
-
     return (
         <>
             <div className="h-full flex flex-col justify-center items-center space-y-4">
-                <div className="text-white">Hello!</div>
+                <div className="text-white py-5">Hello!</div>
+
+               
+                <div className="text-white">{title}</div>
+                
             </div>
         </>
     )

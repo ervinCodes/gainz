@@ -82,7 +82,7 @@ export default function CreateWorkout() {
 
 
 
-
+    // Handles Submit
     const handleSubmit = () => {
         if(workoutTitle === '') {
             setError('Workout name is required');
@@ -96,7 +96,7 @@ export default function CreateWorkout() {
 
         setError(null); // Clears any previous errors
 
-        const workoutData = { title: workoutTitle, workoutData: exercises }; // Create an object with the workout title and exercises
+        const workoutData = { title: workoutTitle, exercises: exercises }; // Create an object with the workout title and exercises
 
         console.log('Workout Submitted:', workoutData) // Log for debugging
 

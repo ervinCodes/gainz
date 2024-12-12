@@ -16,11 +16,12 @@ const ExerciseSchema = new mongoose.Schema({
     },
     weight: { 
         type: Number, 
-        required: false 
+        required: false,
+        default: 0 // Default weight if not provided
     },
     personalRecord: { 
-        type: Boolean, 
-        default: false 
+        type: Number, 
+        default: 0 
     }
 });
 
@@ -35,7 +36,7 @@ const WorkoutSchema = new mongoose.Schema({
         type: String, 
         required: true 
     },
-    exercise: [ExerciseSchema], // Array of exercises
+    exercises: [ExerciseSchema], // Array of exercises
     createAt: { 
         type: Date, 
         default: Date.now 

@@ -7,18 +7,9 @@ export default function MyWorkouts() {
     const navigate = useNavigate();
 
 
-
-
-    // create state variables
-    const [title, setTitle] = useState('');
-    const [exercises, setExercises] = useState([
-        {
-            name: '',
-            sets: 0,
-            reps: 0,
-            weight: 0
-        }
-    ])
+    // State variables
+    const [workout, setWorkout] = useState([]);
+    const [error, setError] = useState('');
 
 
 
@@ -38,9 +29,14 @@ export default function MyWorkouts() {
     
                 console.log('User workout', data.workout); // Log the retreved workouts
 
-                setTitle(data.workout.title)
-                console.log(data.title)
-                setExercises(data.workout)
+                // Ensure workouts exist before accessing them
+                if(Array.isArray(data.workout) && data.workout.length > 0){
+                    setWorkout(data.workout)
+                } else {
+                    setError("No workouts found...");
+                }
+
+                setError(null);
 
             } catch (err) {
                 console.error('Error fetching workouts', err)
@@ -53,10 +49,27 @@ export default function MyWorkouts() {
     return (
         <>
             <div className="h-full flex flex-col justify-center items-center space-y-4">
-                <div className="text-white py-5">Hello!</div>
+                { error && <div className='text-red-600 font-bold'>{error}</div> }
+                <div className="text-white py-5 text-4xl">my <span className='text-alloy-orange'>workouts</span></div>
 
-               
-                <div className="text-white">{title}</div>
+                { workout && 
+                <div className='text-white space-y-8'>
+                    {workout.map((workout, workoutIndex) => (
+                        <div key={workoutIndex} className='flex flex-row md:gap-44 gap-24 px-10'>
+                            <div className="text-2xl font-bold">{workout.title}</div>
+                        
+                            {/* Map through the exercises for this workout */}
+                            {workout.exercises.map((exercise, exerciseIndex) => (
+                                <div key={exerciseIndex} className='flex flex-col text-right'>
+                                    <div className='font-semibold text-lg'>{exercise.name}</div>
+                                    <div>Sets: {exercise.sets}</div>
+                                    <div>Reps: {exercise.reps}</div>
+                                </div>
+                            ))}
+                        </div>
+                    ))}
+                </div>
+                }
                 
             </div>
         </>

@@ -76,4 +76,4 @@ module.exports = {
 
 
 // TODO
-// On MyWorkouts.jsx: Search through database and populate the data onto the page, the data is in array format (FYI)
+// On MyWorkouts.jsx: Reorginize the way the workouts are populating on the page, test for mobile, & think about what I need to focus on next

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';    
+import { useNavigate, Link } from 'react-router-dom';    
 
 const appUrl = import.meta.env.VITE_APP_API_URL;
 
@@ -48,30 +48,42 @@ export default function MyWorkouts() {
 
     return (
         <>
-            <div className="h-full flex flex-col justify-center items-center space-y-4">
-                { error && <div className='text-red-600 font-bold'>{error}</div> }
-                <div className="text-white py-5 text-4xl">my <span className='text-alloy-orange'>workouts</span></div>
+        <div className="h-full flex flex-col justify-center items-center space-y-4">
+            {error && <div className="text-red-600 font-bold">{error}</div>}
+            <div className="text-white py-5 text-4xl">
+                my <span className="text-alloy-orange">workouts</span>
+            </div>
 
-                { workout && 
-                <div className='text-white space-y-8'>
+            {workout && (
+                <div className="text-white w-full space-y-8">
                     {workout.map((workout, workoutIndex) => (
-                        <div key={workoutIndex} className='flex flex-row md:gap-44 gap-24 px-10'>
-                            <div className="text-2xl font-bold">{workout.title}</div>
-                        
-                            {/* Map through the exercises for this workout */}
-                            {workout.exercises.map((exercise, exerciseIndex) => (
-                                <div key={exerciseIndex} className='flex flex-col text-right'>
-                                    <div className='font-semibold text-lg'>{exercise.name}</div>
-                                    <div>Sets: {exercise.sets}</div>
-                                    <div>Reps: {exercise.reps}</div>
+                        <Link key={workoutIndex} to={`/workout/${workout._id}`}>
+                            <div className="w-full">
+                                <div className="lg:px-96 px-10 py-6 flex flex-row justify-between items-center cursor-pointer hover:bg-space-cadet">
+                                    {/* Workout title */}
+                                    <div className="text-2xl font-bold mb-4">{workout.title}</div>
+
+                                    {/* Workout exercises */}
+                                    <div className="flex flex-col gap-2">
+                                        {workout.exercises.map((exercise, exerciseIndex) => (
+                                            <div key={exerciseIndex} className="flex flex-col text-right">
+                                                <div className="font-semibold text-lg">{exercise.name}</div>
+                                                <div>sets: {exercise.sets}</div>
+                                                <div>reps: {exercise.reps}</div>
+                                                <div>top set: {exercise.personalRecord}</div>
+                                            </div>
+                                        ))}
+                                    </div>
                                 </div>
-                            ))}
-                        </div>
+
+                                {/* Horizontal line to separate workouts */}
+                                <hr className="border-gray-600" />
+                            </div>
+                        </Link>
                     ))}
                 </div>
-                }
-                
-            </div>
-        </>
+            )}
+        </div>
+    </>
     )
 }

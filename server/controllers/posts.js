@@ -71,9 +71,26 @@ module.exports = {
             console.error('Error fetching workouts', err)
             res.status(500).json({ message: 'Server Error' })
         }
+    },
+    getSingleWorkout: async (req, res) => {
+        try {
+            // Ensure user is authenticated
+            const userId = req.user.id
+
+            // Find singular workout associated with the logged-in user
+            const userSingleWorkout = Workouts.find({
+                userId: userId
+            })
+
+            res.status(200).json({workout: userSingleWorkout})
+
+        } catch (err) {
+            console.error('Error fetching workouts', err)
+            res.status(500).json({ message: 'Server Error' })
+        }
     }
 };
 
 
 // TODO
-// On MyWorkouts.jsx: Reorginize the way the workouts are populating on the page, test for mobile, & think about what I need to focus on next
+// On MyWorkouts.jsx: test pages for mobile and on StartWorkout.jsx, start populating that singular workout info so that it can be edited as the user is working out. 1/4: getting 404 error, find out why data is not being retrieved from the server.

@@ -74,15 +74,24 @@ module.exports = {
     },
     getSingleWorkout: async (req, res) => {
         try {
+
             // Ensure user is authenticated
-            const userId = req.user.id
+            const userId = req.user.id;
+            const workoutId = req.params.id;
 
             // Find singular workout associated with the logged-in user
-            const userSingleWorkout = Workouts.find({
+            const userSingleWorkout = await Workouts.findById({
+                _id: workoutId,
                 userId: userId
             })
 
-            res.status(200).json({workout: userSingleWorkout})
+            console.log(userSingleWorkout);
+
+            if(!userSingleWorkout) {
+                return res.status(404).json({ message: 'Workout not found' })
+            }
+
+            res.status(200).json({ workout: userSingleWorkout })
 
         } catch (err) {
             console.error('Error fetching workouts', err)
@@ -93,4 +102,4 @@ module.exports = {
 
 
 // TODO
-// On MyWorkouts.jsx: test pages for mobile and on StartWorkout.jsx, start populating that singular workout info so that it can be edited as the user is working out. 1/4: getting 404 error, find out why data is not being retrieved from the server.
+// On MyWorkouts.jsx: test pages for mobile and on StartWorkout.jsx, continue to orginize how the data is displayed and add input fields for the user to input their workout data. From there we can start figuring out how to edit the data on the database.

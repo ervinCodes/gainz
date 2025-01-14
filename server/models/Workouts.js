@@ -1,23 +1,32 @@
 const mongoose = require("mongoose");
 
+// Define a schema for individual sets within an exercise
+const SetSchema = new mongoose.Schema({
+    setNumber: {
+        type: Number,
+        required: true 
+    },
+    reps: {
+        type: Number,
+        required: false,
+        default: 0
+    },
+    weight: {
+        type: Number,
+        required: false,
+        default: 0
+    }
+})
+
 // Define a schema for individual exercises
 const ExerciseSchema = new mongoose.Schema({
     name: { 
         type: String, 
         required: true 
     },
-    sets: { 
-        type: Number, 
+    sets: {
+        type: [SetSchema], // Array of sets
         required: true 
-    },
-    reps: { 
-        type: Number, 
-        required: true 
-    },
-    weight: { 
-        type: Number, 
-        required: false,
-        default: 0 // Default weight if not provided
     },
     personalRecord: { 
         type: Number, 

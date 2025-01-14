@@ -68,8 +68,6 @@ export default function MyWorkouts() {
                                         {workout.exercises.map((exercise, exerciseIndex) => (
                                             <div key={exerciseIndex} className="flex flex-col text-right">
                                                 <div className="font-semibold text-lg">{exercise.name}</div>
-                                                <div>sets: {exercise.sets}</div>
-                                                <div>reps: {exercise.reps}</div>
                                                 <div>top set: {exercise.personalRecord}</div>
                                             </div>
                                         ))}

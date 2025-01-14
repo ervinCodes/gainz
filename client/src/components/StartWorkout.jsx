@@ -7,7 +7,7 @@ export default function StartWorkout() {
     const { id } = useParams(); // Extract the ID from the URL
 
     const [workout, setWorkout] = useState(null);
-    const [setCount, setSetCount] = useState(0)
+    const [completed, setCompleted] = useState(false)
     const [error, setError] = useState('');
 
     useEffect(() => {
@@ -23,7 +23,7 @@ export default function StartWorkout() {
         
                 const data = await response.json()
         
-                console.log('User workout', data); // Log the retreved workouts
+                // console.log('User workout', data); 
 
                 setWorkout(data.workout)
 
@@ -38,12 +38,36 @@ export default function StartWorkout() {
 
     }, [id])
 
-    console.log('workout', workout)
+
+    function handleSetChange(exerciseIndex, setIndex, field, value) {
+        setWorkout((prevWorkout) => {
+            const updatedExercises = prevWorkout.exercises.map((exercise, eIndex) => {
+                if(eIndex === exerciseIndex) {
+                    const updatedSets = exercise.sets.map((set, sIndex) => {
+                        if(sIndex === setIndex) {
+                            return { ...set, [field]: value }
+                        }
+                        return set;
+                    });
+                    return { ...exercise, sets: updatedSets }
+                };
+                return exercise;
+            });
+            return { ...prevWorkout, exercises: updatedExercises };
+        });
+    };
+
+    function handleSubmit(e) {
+
+    }
+
+    // console.log('workout', workout)
+    console.log('Workout', workout)
     
 
     return (
         <>
-            <div className='h-full flex flex-col justify-center items-center space-y-4'>
+            <div className='flex flex-col justify-center items-center space-y-4'>
                 {error && <div className='text-red-600 font-bold'>{error}</div>}
                 
                 {workout && (
@@ -58,19 +82,28 @@ export default function StartWorkout() {
                                 
                                 <div className='flex flex-row justify-center items-center gap-20'>
                                     <div className='flex flex-col gap-5'>
-                                    {Array.from({ length: exercise.sets }).map((set, setIndex) => (
+                                    {exercise.sets.map((set, setIndex) => (
                                         <div key={setIndex} className='flex flex-row gap-28'>
                                             <div className="flex flex-col items-center gap-2">
                                                 <div>Set</div>
-                                                <div className='border px-2'>{setIndex + 1}</div>
+                                                <div className='border px-2 rounded-md'>{set.setNumber}</div>
                                             </div>
                                             <div className='flex flex-col gap-2 items-center'>
                                                 <div>Reps</div>
-                                                <input type="text" placeholder={exercise.reps} className='rounded-md w-16 text-center'/>
+                                                <input 
+                                                    type="number" 
+                                                    value={exercise.reps}
+                                                    onChange={(e) => handleSetChange(exerciseIndex, setIndex, 'reps', e.target.value)}
+                                                    placeholder='10' 
+                                                    className='rounded-md w-16 text-center text-black'/>
                                             </div>
                                             <div className='flex flex-col gap-2 items-center'>
                                                 <div>Weight</div>
-                                                <input type="text" className='rounded-md w-16'/>
+                                                <input 
+                                                    type="number" 
+                                                    value={exercise.weight}
+                                                    onChange={(e) => handleSetChange(exerciseIndex, setIndex, 'weight', e.target.value)}
+                                                    className='rounded-md w-16 text-black text-center'/>
                                             </div>
                                         </div> 
                                     ))}
@@ -81,6 +114,12 @@ export default function StartWorkout() {
                         ))}
                     </div>
                 )}
+                <button
+                onClick={handleSubmit}
+                className="mt-4 bg-green-500 text-white px-4 py-2 rounded"
+                >
+                Save Workout
+                </button>
             </div>
         </>
     );

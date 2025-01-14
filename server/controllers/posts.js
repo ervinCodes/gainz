@@ -102,4 +102,5 @@ module.exports = {
 
 
 // TODO
-// On MyWorkouts.jsx: test pages for mobile and on StartWorkout.jsx, continue to orginize how the data is displayed and add input fields for the user to input their workout data. From there we can start figuring out how to edit the data on the database.
+// StarWorkout: I've made sure I can update the state workout variable for each set, now I need to handle the submit of this page so that information goes to the server > DB.
+// Be able to check the set as complete and when all 3 are submitted sending that information to the server to be updated.

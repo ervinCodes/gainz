@@ -11,7 +11,7 @@ export default function CreateWorkout() {
 
     const [workoutTitle, setWorkoutTitle] = useState(''); // State to store the title of the workout
     const [exercises, setExercises] = useState([ // State to hold a list of exercises; each exercise includes name, sets, reps, and weight
-        { name: '', sets: 0, reps: 0 },
+        { name: '', sets: 0 },
     ]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -48,7 +48,7 @@ export default function CreateWorkout() {
 
     // Function to add a new exercise row with default values (empty name, 0 sets)
     const handleAddExercise = () => {
-        setExercises([...exercises, { name: '', sets: 0, reps: 0,}])
+        setExercises([...exercises, { name: '', sets: 0}])
     }
 
 
@@ -89,14 +89,24 @@ export default function CreateWorkout() {
             return;
         }
 
-        if(!Array.isArray(exercises) || exercises.some(exercises => !exercises.name || exercises.sets <= 0 || exercises.reps <= 0)) {
+        if(!Array.isArray(exercises) || exercises.some(exercises => !exercises.name || exercises.sets <= 0)) {
             setError('All exercises must have a valid name, sets, and reps');
             return;
         }
 
         setError(null); // Clears any previous errors
 
-        const workoutData = { title: workoutTitle, exercises: exercises }; // Create an object with the workout title and exercises
+        const workoutData = { // Create an object with the workout title and exercises
+            title: workoutTitle, 
+            exercises: exercises.map(exercise => ({
+                name: exercise.name,
+                sets: Array.from({ length: exercise.sets }, (_, index) => ({
+                    setNumber: index + 1,
+                    reps: 0,
+                    weight: 0,
+                }))
+            })) 
+        }; 
 
         console.log('Workout Submitted:', workoutData) // Log for debugging
 
@@ -167,18 +177,6 @@ export default function CreateWorkout() {
                                 value={exercise.sets}
                                 onChange={(e) => handleExerciseChange(index, "sets", e.target.value)}
                                 className="border border-gray-400 px-2 py-1 rounded"
-                            />
-                        </div>
-                        {/* Reps */}
-                        <div className='flex flex-col'>
-                            <div className="text-white">Reps</div>
-                            <input
-                            type="number"
-                            value={exercise.reps}
-                            onChange={(e) =>
-                            handleExerciseChange(index, "reps", e.target.value)
-                            }
-                            className="border border-gray-400 px-2 py-1 rounded"
                             />
                         </div>
                         {/* Delete Workout */}

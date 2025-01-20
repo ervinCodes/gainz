@@ -15,6 +15,11 @@ const SetSchema = new mongoose.Schema({
         type: Number,
         required: false,
         default: 0
+    },
+    isChecked: {
+        type: Boolean,
+        required: false,
+        default: false
     }
 })
 

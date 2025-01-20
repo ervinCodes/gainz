@@ -97,6 +97,21 @@ module.exports = {
             console.error('Error fetching workouts', err)
             res.status(500).json({ message: 'Server Error' })
         }
+    },
+    deleteWorkout: async(req, res) => {
+        try {
+
+            const workoutId = req.params.id
+
+            // Find workout associated with the logged-in user and delete
+            await Workouts.findByIdAndDelete(workoutId)
+
+            res.status(200).json({ message: "Workout deleted successfully" })
+ 
+        } catch (err) {
+            console.error('Error deleting workout', err)
+            res.status(500).json({ message: 'Server Error' })
+        }
     }
 };
 
@@ -104,3 +119,4 @@ module.exports = {
 // TODO
 // StarWorkout: I've made sure I can update the state workout variable for each set, now I need to handle the submit of this page so that information goes to the server > DB.
 // Be able to check the set as complete and when all 3 are submitted sending that information to the server to be updated.
+// Implement top set check when a user creates a new workout

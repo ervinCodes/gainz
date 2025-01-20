@@ -49,7 +49,7 @@ const router = createBrowserRouter([
         element: <MyWorkouts />
       },
       {
-        path: '/workout/:id',
+        path: '/:id',
         element: <StartWorkout />,
       },
     ]

@@ -14,5 +14,6 @@ router.post("/signup", authController.postSignup);
 router.post("/createWorkout", ensureAuth, postsController.postWorkout)
 router.get("/getWorkouts", ensureAuth, postsController.getWorkouts)
 router.get("/:id", ensureAuth, postsController.getSingleWorkout)
+router.delete("/:id", ensureAuth, postsController.deleteWorkout)
 
 module.exports = router;

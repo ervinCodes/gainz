@@ -32,7 +32,7 @@ export default function Navbar() {
 
     return (
   
-            <nav className='fixed w-full'>
+            <nav className='fixed w-full z-50'>
                 {/* Container */}
                 <div className='flex flex-row w-full bg-black justify-between items-start py-4 px-2 text-white font-oxygen'>
                     {/* Row 1*/}

@@ -36,6 +36,10 @@ const ExerciseSchema = new mongoose.Schema({
     personalRecord: { 
         type: Number, 
         default: 0 
+    },
+    hasTopSet: { 
+        type: Boolean, 
+        required: true
     }
 });
 

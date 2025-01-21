@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const PersonalRecords = new mongoose.Schema({
+const PersonalRecordSchema = new mongoose.Schema({
     userId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
@@ -13,7 +13,6 @@ const PersonalRecords = new mongoose.Schema({
     topSet: {
         type: Number,
         required: true,
-        default: 0
     },
     dateAchieved: {
         type: Date,

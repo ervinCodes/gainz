@@ -1,7 +1,7 @@
 // const cloudinary = require("../middleware/cloudinary");
 const { ObjectId } = require("mongodb");
 const Workouts = require('../models/Workouts');
-const User = require("../models/User");
+const PersonalRecord = require('../models/PersonalRecords');
 
 module.exports = {
     getProfile: async (req, res) => {
@@ -17,8 +17,8 @@ module.exports = {
         }
     },
     postWorkout: async (req, res) => {
-        console.log("Request Body", req.body)
-        console.log("User:", req.user)
+        // console.log("Request Body", req.body)
+        // console.log("User:", req.user)
 
         try {
 
@@ -33,15 +33,54 @@ module.exports = {
 
             // Validate incoming data
             const { title, exercises } = req.body;
+
             if(!title || !Array.isArray(exercises)) {
                 return res.status(400).json({ message: "Invalid data provided" })
+            }
+
+            const updatedExercises = [];
+
+            // Check and create personal records for each exercise
+            for(const exercise of exercises) {
+                const { name, sets } = exercise;
+
+                // Initialize personalRecord to 0
+                let personalRecord = 0;
+
+                // Check if a personal record for this exercise already exists
+                const existingRecord = await PersonalRecord.findOne({
+                    userId,
+                    exerciseName: name,
+                })
+
+                if(existingRecord) {
+                    // If an existing record is found, set personalRecord to the existing topSet
+                    personalRecord = existingRecord.topSet
+                } else {
+                    // Create a new personal record with the default top set
+                    await PersonalRecord.create({
+                        userId,
+                        exerciseName: name,
+                        topSet: 0
+                    });
+                }
+
+                // Create the exercise object with the personalRecord
+                const exerciseData = {
+                    name,
+                    sets,
+                    personalRecord,
+                    hasTopSet: false,
+                };
+
+                updatedExercises.push(exerciseData)
             }
 
             // Create the workout
             const newWorkout = await Workouts.create({
                 userId: userId, // Associates workout with logged-in user
                 title,
-                exercises: exercises,
+                exercises: updatedExercises,
             });
 
             console.log('New Workout Created', newWorkout)

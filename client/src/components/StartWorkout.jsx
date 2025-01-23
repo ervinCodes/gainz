@@ -57,8 +57,44 @@ export default function StartWorkout() {
         });
     };
 
-    function handleSubmit() {
-        // Check if all sets have been checked, if not, notify the user that all sets must be checked 
+    async function handleSubmit() {
+        // CEnsure we're working with the latest state
+        const allChecked = workout.exercises.every(exercise => exercise.sets.every(set => set.isChecked))
+
+        if(!allChecked) {
+            alert('Please complete all sets before submitting the workout.')
+            return; // Prevents submission
+        }
+
+        const workoutData = {
+            exercises: workout.exercises.map(exercise => ({
+                sets: exercise.sets.map(set => ({
+                    reps: set.reps,
+                    weight: set.weight,
+                }))
+            }))
+        }
+            
+        try {
+            const response = await fetch(`${appUrl}/updateExercises`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(workoutData), // convert data to JSON 
+                credentials: 'include',
+            })
+
+            if(!response.ok) {
+                throw new Error('Failed to save data.')
+            }
+
+            alert('Workout saved successfully!');
+
+        } catch (error) {
+                console.error('Error saving workout:', error)
+                alert('An error occurred while saving the workout. Please try again.');
+        }
     }
 
     // console.log('workout', workout)

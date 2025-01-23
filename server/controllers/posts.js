@@ -70,7 +70,6 @@ module.exports = {
                     name,
                     sets,
                     personalRecord,
-                    hasTopSet: false,
                 };
 
                 updatedExercises.push(exerciseData)
@@ -151,11 +150,12 @@ module.exports = {
             console.error('Error deleting workout', err)
             res.status(500).json({ message: 'Server Error' })
         }
+    },
+    updateExercises: async(req, res) => {
+
     }
 };
 
 
 // TODO
-// StarWorkout: I've made sure I can update the state workout variable for each set, now I need to handle the submit of this page so that information goes to the server > DB.
-// Be able to check the set as complete and when all 3 are submitted sending that information to the server to be updated.
-// Implement top set check when a user creates a new workout
+// StarWorkout: handleSubmit has been completed, now I need to create the route in the server, and then create a method called updateExercises so that it updates the information in the DB

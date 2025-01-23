@@ -37,10 +37,6 @@ const ExerciseSchema = new mongoose.Schema({
         type: Number, 
         default: 0 
     },
-    hasTopSet: { 
-        type: Boolean, 
-        required: true
-    }
 });
 
 // Define a schema for a workout that includes multiple exercises

@@ -105,7 +105,6 @@ export default function CreateWorkout() {
                     reps: 0,
                     weight: 0,
                 })),
-                hasTopSet: false, // Added to indicate the need for a top set check
             })) 
         }; 
 

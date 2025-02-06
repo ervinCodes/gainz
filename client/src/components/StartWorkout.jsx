@@ -103,11 +103,12 @@ export default function StartWorkout() {
     }
 
     console.log(workout)
+    console.log('Workout Title', workout.title)
     
 
     return (
         <>
-            <div className='flex flex-col justify-center items-center space-y-4'>
+            <div className='flex flex-col justify-center items-center space-y-8'>
                 {error && <div className='text-red-600 font-bold'>{error}</div>}
                 
                 {workout && (
@@ -123,7 +124,10 @@ export default function StartWorkout() {
                                 <div className='flex flex-row justify-center items-center gap-20'>
                                     <div className='flex flex-col gap-5'>
                                     {exercise.sets.map((set, setIndex) => (
-                                        <div key={setIndex} className='flex flex-row gap-28 mx-10'>
+                                        // Set Container
+                                        <div key={setIndex} className='flex flex-row lg:gap-28 gap-20 mx-10'>
+                                            
+                                            {/* Col 1 */}
                                             <div className="flex flex-col items-center gap-2">
                                                 <div>Set</div>
                                                 <div className='flex flex-row gap-2 items-center'>
@@ -146,8 +150,9 @@ export default function StartWorkout() {
                                                     </label>
                                                     <div>{set.setNumber}</div>
                                                 </div>
-                                                
                                             </div>
+
+                                            {/* Col 2 */}
                                             <div className='flex flex-col gap-2 items-center'>
                                                 <div>Reps</div>
                                                 <input 
@@ -157,6 +162,8 @@ export default function StartWorkout() {
                                                     placeholder='10' 
                                                     className='rounded-md w-16 text-center text-black'/>
                                             </div>
+
+                                            {/* Col 3 */}
                                             <div className='flex flex-col gap-2 items-center'>
                                                 <div>Weight</div>
                                                 <input 
@@ -168,7 +175,6 @@ export default function StartWorkout() {
                                         </div> 
                                     ))}
                                     </div>
-                                    
                                 </div>
                             </div>
                         ))}
@@ -176,11 +182,11 @@ export default function StartWorkout() {
                 )}
                 <button
                 onClick={handleSubmit}
-                className="mt-4 bg-green-500 text-white px-4 py-2 rounded"
+                className="bg-green-500 text-white px-4 py-2 rounded"
                 >
                 Save Workout
                 </button>
-                <Link to={'/profile'} className='text-white hover:underline'>Back</Link>
+                <Link to={'/myworkouts'} className='text-alloy-orange hover:underline'>my workouts</Link>
             </div>
             
         </>

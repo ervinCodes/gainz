@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';   
+import { useParams, Link } from 'react-router-dom';   
 
 const appUrl = import.meta.env.VITE_APP_API_URL;
 
@@ -7,7 +7,6 @@ export default function StartWorkout() {
     const { id } = useParams(); // Extract the ID from the URL
 
     const [workout, setWorkout] = useState(null);
-    const [completed, setCompleted] = useState(false)
     const [error, setError] = useState('');
 
     useEffect(() => {
@@ -38,7 +37,7 @@ export default function StartWorkout() {
 
     }, [id])
 
-
+    // Handles changes to each set
     function handleSetChange(exerciseIndex, setIndex, field, value) {
         setWorkout((prevWorkout) => {
             const updatedExercises = prevWorkout.exercises.map((exercise, eIndex) => {
@@ -57,6 +56,7 @@ export default function StartWorkout() {
         });
     };
 
+    // Handles the submittion of a complete set
     async function handleSubmit() {
         // CEnsure we're working with the latest state
         const allChecked = workout.exercises.every(exercise => exercise.sets.every(set => set.isChecked))
@@ -68,15 +68,18 @@ export default function StartWorkout() {
 
         const workoutData = {
             exercises: workout.exercises.map(exercise => ({
+                name: exercise.name,
                 sets: exercise.sets.map(set => ({
                     reps: set.reps,
                     weight: set.weight,
                 }))
             }))
         }
+
+        console.log('Workout Data being sent to server:', workoutData)
             
         try {
-            const response = await fetch(`${appUrl}/updateExercises`, {
+            const response = await fetch(`${appUrl}/updateExercises/${id}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -89,6 +92,8 @@ export default function StartWorkout() {
                 throw new Error('Failed to save data.')
             }
 
+            
+
             alert('Workout saved successfully!');
 
         } catch (error) {
@@ -97,8 +102,7 @@ export default function StartWorkout() {
         }
     }
 
-    // console.log('workout', workout)
-    console.log('Workout', workout)
+    console.log(workout)
     
 
     return (
@@ -119,7 +123,7 @@ export default function StartWorkout() {
                                 <div className='flex flex-row justify-center items-center gap-20'>
                                     <div className='flex flex-col gap-5'>
                                     {exercise.sets.map((set, setIndex) => (
-                                        <div key={setIndex} className='flex flex-row gap-28'>
+                                        <div key={setIndex} className='flex flex-row gap-28 mx-10'>
                                             <div className="flex flex-col items-center gap-2">
                                                 <div>Set</div>
                                                 <div className='flex flex-row gap-2 items-center'>
@@ -176,7 +180,9 @@ export default function StartWorkout() {
                 >
                 Save Workout
                 </button>
+                <Link to={'/profile'} className='text-white hover:underline'>Back</Link>
             </div>
+            
         </>
     );
 }

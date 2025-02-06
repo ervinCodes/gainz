@@ -123,7 +123,7 @@ module.exports = {
                 userId: userId
             })
 
-            console.log(userSingleWorkout);
+            console.log('User Single Workout',userSingleWorkout);
 
             if(!userSingleWorkout) {
                 return res.status(404).json({ message: 'Workout not found' })
@@ -151,11 +151,79 @@ module.exports = {
             res.status(500).json({ message: 'Server Error' })
         }
     },
-    updateExercises: async(req, res) => {
+    updateExercises: async (req, res) => {
+        try {
+            const userId = req.user?.id;
+            const workoutId = req.params.id;
+            const exercises = req.body.exercises;
+    
+            if (!userId) {
+                return res.status(401).json({ message: "Unauthorized" });
+            }
+    
+            const updatedExercises = [];
 
-    }
+            console.log("Received request data:", req.body)
+    
+            // Check and edit personal record for each exercise
+            for (const exercise of exercises) {
+                const { name, sets } = exercise;
+    
+                // Find the max weight lifted in the sets
+                const maxWeight = Math.max(...sets.map(set => set.weight || 0))
+
+                console.log('Max Weight:', maxWeight)
+    
+                // Check if a personal record for this exercise exists
+                let existingRecord = await PersonalRecord.findOne({ userId, exerciseName: name });
+    
+                if (existingRecord) {
+                    if (maxWeight > existingRecord.topSet) {
+                        // Update the PR only if the new weight is higher
+                        existingRecord = await PersonalRecord.findOneAndUpdate(
+                            { userId, exerciseName: name },
+                            { $set: { topSet: maxWeight } },
+                            { new: true, returnDocument: "after" }
+                        );
+                    }
+                } else {
+                    // Create a new personal record if none exists
+                    existingRecord = await PersonalRecord.create({
+                        userId,
+                        exerciseName: name,
+                        topSet: maxWeight,
+                    });
+                }
+    
+                // Push updated exercise with correct personal record
+                updatedExercises.push({
+                    name,
+                    sets,
+                    personalRecord: existingRecord.topSet, // Ensure it's the updated value
+                });
+            }
+    
+            // Find workout associated with the workout ID and update 
+            const updatedWorkout = await Workouts.findByIdAndUpdate(
+                workoutId,
+                { $set: { exercises: updatedExercises } },
+                { new: true }
+            );
+    
+            if (!updatedWorkout) {
+                return res.status(404).json({ message: "Workout not found" });
+            }
+    
+            res.status(200).json({ message: "Workout updated successfully!", updatedWorkout });
+    
+        } catch (err) {
+            console.error("Error updating workout", err);
+            res.status(500).json({ message: "Server Error" });
+        }
+    },    
 };
 
+// test this again
 
 // TODO
 // StarWorkout: handleSubmit has been completed, now I need to create the route in the server, and then create a method called updateExercises so that it updates the information in the DB

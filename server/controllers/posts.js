@@ -220,7 +220,28 @@ module.exports = {
             console.error("Error updating workout", err);
             res.status(500).json({ message: "Server Error" });
         }
-    },    
+    },
+    deleteSet: async (req, res) => {
+        try {
+            console.log(req.params)
+            const { workoutId, exerciseId, setId } = req.params; // Extract ID's from URL
+
+            // Find one and delete
+            const updateWorkout = await Workouts.findOneAndUpdate(
+                { _id: workoutId, "exercises._id": exerciseId }, // Find workout containing the exercise
+                { $pull: { "exercises.$.sets": { _id: setId } } }, // Remove set from the exercise
+                { new: true } // Return updated workout
+            )
+
+
+
+            res.status(200).json({ message: 'Set deleted successfully!', updateWorkout})
+
+        } catch (err) {
+            console.error('Error deleting set', err)
+            res.status(500).json({ message: 'Server Error' })
+        }
+    }
 };
 
 // test this again

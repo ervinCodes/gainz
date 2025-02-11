@@ -88,7 +88,7 @@ export default function MyWorkouts() {
                                         {/* Workout title */}
                                         <div className='flex flex-row lg:gap-4 gap-2 flex-1'>
                                         <div className="lg:text-2xl text-base font-bold mb-4">{workout.title}</div> 
-                                        {/* Delete Workout */}
+                                            {/* Delete Workout */}
                                             <button 
                                                 onClick={(e) => {
                                                     e.preventDefault();

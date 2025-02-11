@@ -73,7 +73,7 @@ export default function CreateWorkout() {
 
 
 
-
+    // Function to delete an exercise
     const handleDeleteExercise = (index) => {
         const newExercises = [...exercises]
         newExercises.splice(index, 1)

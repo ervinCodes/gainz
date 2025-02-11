@@ -71,8 +71,10 @@ export default function StartWorkout() {
             exercises: workout.exercises.map(exercise => ({
                 name: exercise.name,
                 sets: exercise.sets.map(set => ({
+                    setNumber: set.setNumber,
                     reps: set.reps,
                     weight: set.weight,
+                    isChecked: false,
                 }))
             }))
         }
@@ -103,40 +105,47 @@ export default function StartWorkout() {
         }
     }
 
+    // Function to add a set
+    function handleAddSet(exerciseIndex) {
+        setWorkout((prevWorkout) => {
+            const updatedExercises = prevWorkout.exercises.map((exercise, eIndex) => {
+                if(eIndex === exerciseIndex) {
+                    return {
+                        ...exercise,
+                        sets: [
+                            ...exercise.sets,
+                            {
+                                _id: crypto.randomUUID(), // Generate a temporary unique ID
+                                setNumber: exercise.sets.length + 1, // Increment set number
+                                reps: 0,
+                                weight: 0,
+                                isChecked: false
+                            }
+                        ]
+                    };
+                }
+                return exercise;
+            });
+
+            return { ...prevWorkout, exercises: updatedExercises };
+        })
+    }
+
     // Function to delete single set
-    async function handleDeleteSet(workoutId, exerciseId, setId) {
-        try {
-            const response = await fetch(`${appUrl}/deleteSet/${workoutId}/${exerciseId}/${setId}`, {
-                method: 'DELETE',
-                credentials: 'include'
-            })
+    function handleDeleteSet(exerciseIndex, setId) {
+        setWorkout(prevWorkout => {
+            const updatedExercises = prevWorkout.exercises.map((exercise, eIndex) => {
+                if(eIndex === exerciseIndex) {
+                    return {
+                        ...exercise,
+                        sets: exercise.sets.filter(set => set._id !== setId) // Remove the set from state
+                    };
+                }
+                return exercise
+            });
 
-            if(!response.ok) {
-                throw new Error('HTTP Error!', response.status)
-            }
-
-            console.log('Set deleted successfully!')
-
-            setWorkout((prevWorkout) => {
-                const updatedExercises = prevWorkout.exercises.map((exercise) => {
-                    if(exercise._id === exerciseId) {
-                        return {
-                            ...exercise,
-                            sets: exercise.sets.filter((set) => set._id !== setId) // Remove the deleted set
-                        };
-                    }
-                    return exercise;
-                });
-
-                return { ...prevWorkout, exercises: updatedExercises}
-            })
-
-        } catch (error) {
-            console.error('Error deleting set', error)
-            setError('Unable to delete set')
-        }
-
-        setError(null);
+            return { ...prevWorkout, exercises: updatedExercises };
+        })
     }
 
     console.log(workout)
@@ -213,10 +222,10 @@ export default function StartWorkout() {
                                                 <button 
                                                     onClick={(e) => {
                                                         e.preventDefault();
-                                                        handleDeleteSet(workout._id, exercise._id, set._id)
+                                                        handleDeleteSet(exerciseIndex, set._id)
                                                     }} 
                                                     className='text-red-500 self-end'>
-                                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="lg:size-6 size-4">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="lg:size-4 size-4">
                                                         <path strokeLinecap="round" strokeLinejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
                                                     </svg>
                                                 </button>
@@ -225,6 +234,9 @@ export default function StartWorkout() {
                                     ))}
                                     </div>
                                 </div>
+                                <button onClick={() => handleAddSet(exerciseIndex)} className='text-alloy-orange hover:cursor hover:underline'>
+                                    + add set
+                                </button>
                             </div>
                         ))}
                     </div>

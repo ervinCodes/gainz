@@ -221,30 +221,9 @@ module.exports = {
             res.status(500).json({ message: "Server Error" });
         }
     },
-    deleteSet: async (req, res) => {
-        try {
-            console.log(req.params)
-            const { workoutId, exerciseId, setId } = req.params; // Extract ID's from URL
-
-            // Find one and delete
-            const updateWorkout = await Workouts.findOneAndUpdate(
-                { _id: workoutId, "exercises._id": exerciseId }, // Find workout containing the exercise
-                { $pull: { "exercises.$.sets": { _id: setId } } }, // Remove set from the exercise
-                { new: true } // Return updated workout
-            )
-
-
-
-            res.status(200).json({ message: 'Set deleted successfully!', updateWorkout})
-
-        } catch (err) {
-            console.error('Error deleting set', err)
-            res.status(500).json({ message: 'Server Error' })
-        }
-    }
 };
 
 // test this again
 
 // TODO
-// StarWorkout: handleSubmit has been completed, now I need to create the route in the server, and then create a method called updateExercises so that it updates the information in the DB
+// StarWorkout: add function to add a set if a user wishes to add another set.

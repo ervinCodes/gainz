@@ -13,8 +13,11 @@ router.get("/logout", authController.logout);
 router.post("/signup", authController.postSignup);
 router.post("/createWorkout", ensureAuth, postsController.postWorkout)
 router.get("/getWorkouts", ensureAuth, postsController.getWorkouts)
-router.get("/:id", ensureAuth, postsController.getSingleWorkout)
+router.get("/getWorkout/:id", ensureAuth, postsController.getSingleWorkout)
 router.delete("/:id", ensureAuth, postsController.deleteWorkout)
 router.put("/updateExercises/:id", ensureAuth, postsController.updateExercises)
+router.get("/exerciseList", ensureAuth, homeController.getExerciseList);
+
 
 module.exports = router;
+

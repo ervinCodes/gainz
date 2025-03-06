@@ -111,6 +111,7 @@ module.exports = {
         }
     },
     getSingleWorkout: async (req, res) => {
+        console.log("Executing getSingleWorkout");  // Debugging
         try {
 
             // Ensure user is authenticated
@@ -123,9 +124,8 @@ module.exports = {
                 userId: userId
             })
 
-            console.log('User Single Workout',userSingleWorkout);
-
             if(!userSingleWorkout) {
+                console.log("Workout not found");  // Debugging
                 return res.status(404).json({ message: 'Workout not found' })
             }
 
@@ -223,7 +223,7 @@ module.exports = {
     },
 };
 
-// test this again
+
 
 // TODO
-// StarWorkout: add function to add a set if a user wishes to add another set.
+// For some reason, when trying to execute /getExerciseList, it runds /getSingleWorkout.  Find out why . 

@@ -13,7 +13,7 @@ export default function StartWorkout() {
     useEffect(() => {
         async function fetchWorkout() {
             try {
-                const response = await fetch(`${appUrl}/${id}`, {
+                const response = await fetch(`${appUrl}/getWorkout/${id}`, {
                     credentials: 'include',
                 })
         
@@ -247,7 +247,7 @@ export default function StartWorkout() {
                 >
                 Finish Workout
                 </button>
-                <Link to={'/myworkouts'} className='text-alloy-orange hover:underline'>my workouts</Link>
+                <Link to={'/myworkouts'} className='text-alloy-orange hover:underline'>back</Link>
             </div>
             
         </>

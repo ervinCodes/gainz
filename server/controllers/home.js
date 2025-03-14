@@ -12,7 +12,7 @@ module.exports = {
                 return res.status(404).json({ message: 'Exercise list not found' });
             }
     
-            console.log('Exercise List:', exerciseList);
+            // console.log('Exercise List:', exerciseList);
             res.status(200).json({ exerciseList });
         } catch (err) {
             console.error('Error fetching exercise list:', err);

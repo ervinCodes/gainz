@@ -73,7 +73,7 @@ export default function MyWorkouts() {
 
     return (
         <>
-            <div className="h-full flex flex-col justify-center items-center space-y-4">
+            <div className="flex flex-col justify-center items-center space-y-4">
                 {error && <div className="text-red-600 font-bold">{error}</div>}
                 <div className="text-white py-5 text-4xl">
                     my <span className="text-alloy-orange">workouts</span>

@@ -11,9 +11,14 @@ export default function CreateWorkout() {
     // State to hold a list of exercises; each exercise includes name, sets, reps, and weight
     { name: "", sets: 0, category: "" },
   ]);
+  const [customExercise, setCustomExercise] = useState([
+    {name: "", category: ""}
+  ])
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [exerciseList, setExerciseList] = useState([]);
+  const [toggleModal, setToggleModal] = useState(false);
+  const [successMessage, setSuccessMessage] = useState('');
 
   // Fetches data from the server with credentials and retrieves username and email
   useEffect(() => {
@@ -53,7 +58,7 @@ export default function CreateWorkout() {
 
         const data = await response.json();
 
-        console.log("Server Data", data);
+        // console.log("Server Data", data);
 
         setExerciseList(data.exerciseList);
       } catch (error) {
@@ -69,7 +74,7 @@ export default function CreateWorkout() {
 
   const categories = [...new Set(exerciseList.map((ex) => ex.category))]; // Extracting unique categories
 
-  console.log("Exercise List:", exerciseList);
+  // console.log("Exercise List:", exerciseList);
 
   // Function to add a new exercise row with default values (empty name, 0 sets)
   const handleAddExercise = () => {
@@ -83,6 +88,12 @@ export default function CreateWorkout() {
     newExercise[index][field] = value; // Update the specific field of the selected exercise
     setExercises(newExercise); // Update the exercises state with the modified array
   };
+
+  const handleCustomExercise = (field, value) => {
+    const newCustom = [...customExercise] // Copy the customeExercise array
+    newCustom[0][field] = value; // Update the value of the selected field (name, category)
+    setCustomExercise(newCustom); // Updates state w/modified array
+  }
 
   // Function to handle changes to the workout title input field
   const handleWorkoutTitleChange = (e) => {
@@ -148,25 +159,60 @@ export default function CreateWorkout() {
         navigate("/myworkouts"); // redirect to profile, but after workout is saved redirect to new page
       })
       .catch((err) => {
-        console.error("Error saving workout:", error);
+        console.error("Error saving workout:", err);
       });
   };
 
   // Function to add custom exercise
-  // useEffect(() => {
-  //   async function addCustomExercise() {
-  //     try {
-  //       const response = await fetch(`{${appUrl}/addCustomExercise}`, {
-  //         method: 'POST',
-  //         headers: {
-  //           'Content-Type': 'application/json'
-  //         }
-  //       })
-  //     } catch(error) {
+  async function addCustomExercise() {
+    try {
 
-  //     }
-  //   }
-  // })
+      // Validate input before sending request
+      if(!Array.isArray(customExercise) || customExercise.some((ex) => ex.name === '' || ex.category === '')) {
+        setError('A custom exercise must have a valid name and/or category must be selected.')
+        return
+      }
+
+      setError(null)
+
+      // Payload
+      const customExerciseData = {
+        name: customExercise[0].name,
+        category: customExercise[0].category,
+      }
+
+      console.log('Custom Exercise Data', customExerciseData)
+
+      // Send data to API
+      const response = await fetch(`${appUrl}/addCustomExercise`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(customExerciseData),
+        credentials: 'include',
+      })
+
+      console.log('API Response', response)
+
+      if(!response.ok) {
+        throw new Error('Failed to save custom exercise.')
+      }
+
+      const result = await response.json();
+      console.log("Custom exercise saved successfully!", result)
+
+      setSuccessMessage('Custom exercise added successfully!')
+
+      // Reset form
+      setCustomExercise([{ name: '', category: ''}])
+
+    } catch(error) {
+      console.error('Error:', error)
+    }
+  }
+
+  console.log('Custom Exercise', customExercise)
 
   if (loading) {
     return <div className="text-white">Loading...</div>;
@@ -174,23 +220,28 @@ export default function CreateWorkout() {
 
   return (
     <>
-      <div className="h-full flex flex-col justify-center items-center space-y-4">
+      <div className="flex flex-col justify-center items-center space-y-4 relative">
         {/* Displays error if one exists */}
         {error && <div className="text-red-600 font-bold">{error}</div>}
+
         <input
           type="text"
           value={workoutTitle}
           onChange={handleWorkoutTitleChange}
-          className="border border-gray-400 px-3 py-2 rounded"
+          className="border border-gray-400 px-3 py-2 rounded text-center"
           placeholder="Name this workout..."
         />
 
         {exercises.map((exercise, index) => (
-          <div className="flex flex-col">
-            <div key={index} className="flex flex-row items-center gap-5">
+          <div key={index} className="flex flex-col">
+            <div
+              className="flex md:flex-row flex-col items-center gap-5"
+            >
               {/* Category Selection */}
               <div className="flex flex-col">
-                <div className="text-white">Select Category</div>
+                <div className="text-white md:text-left text-center">
+                  Select Category
+                </div>
                 <select
                   value={exercise.category}
                   onChange={(e) =>
@@ -205,10 +256,18 @@ export default function CreateWorkout() {
                     </option>
                   ))}
                 </select>
+                <button
+                  onClick={() => setToggleModal(true)}
+                  className="text-alloy-orange self-start hover:font-semibold md:hidden block"
+                >
+                  + add custom exercise
+                </button>
               </div>
               {/* Exercise Selection/Title */}
               <div className="flex flex-col">
-                <div className="text-white">Exercise Name</div>
+                <div className="text-white md:text-left text-center">
+                  Exercise Name
+                </div>
                 <select
                   type="text"
                   value={exercise.name}
@@ -229,14 +288,14 @@ export default function CreateWorkout() {
               </div>
               {/* Sets */}
               <div className="flex flex-col">
-                <div className="text-white">Sets</div>
+                <div className="text-white md:text-left text-center">Sets</div>
                 <input
                   type="number"
                   value={exercise.sets}
                   onChange={(e) =>
                     handleExerciseChange(index, "sets", e.target.value)
                   }
-                  className="border border-gray-400 px-2 py-1 rounded"
+                  className="border border-gray-400 px-2 py-1 rounded md:text-left text-center"
                 />
               </div>
               {/* Delete Workout */}
@@ -260,15 +319,14 @@ export default function CreateWorkout() {
                 </svg>
               </button>
             </div>
-            <button className="text-alloy-orange self-start hover:font-semibold">+ add custom exercise</button>
+            <button onClick={() => setToggleModal(true)} className="text-alloy-orange self-start hover:font-semibold md:block hidden">
+              + add custom exercise
+            </button>
           </div>
         ))}
 
-        <button
-          onClick={handleAddExercise}
-          className="mt-4 bg-blue-500 text-white px-4 py-2 rounded"
-        >
-          Add Exercise
+        <button onClick={handleAddExercise} className="mt-4 text-alloy-orange ">
+          + add exercise
         </button>
 
         <button
@@ -277,6 +335,74 @@ export default function CreateWorkout() {
         >
           Save Workout
         </button>
+
+        {/* Modal */}
+        {toggleModal && (
+          <div className="flex flex-col items-center border bg-space-cadet border-black w-96 h-auto rounded-lg p-3 gap-1 absolute shadow-2xl">
+                {/* Close Button */}
+            <button
+              onClick={() => setToggleModal(false)}
+              className="absolute top-2 right-2 text-white text-xs font-bold w-6 h-6 rounded-full flex items-center justify-center">
+              x
+            </button>
+            {successMessage && <div className="text-green-600 font-bold">{successMessage}</div>}
+            <div className="text-2xl font-semibold text-white mb-3">
+              Add Custom Exercise
+            </div>
+            <div className="flex flex-row gap-4 w-full justify-between">
+              <label htmlFor="exercise-name" className="text-white">
+                Exercise Name
+              </label>
+              <input
+                type="text"
+                className="border border-black rounded text-center"
+                placeholder="e.g squats"
+                id="exercise-name"
+                onChange={(e) => handleCustomExercise("name", e.target.value)}
+              />
+            </div>
+            <div className="flex flex-row gap-4 w-full justify-between">
+              <label htmlFor="exercise-name" className="text-white">
+                Category
+              </label>
+              <select
+                type="text"
+                className="border border-black rounded w-44 text-center"
+                id="exercise-name"
+                onChange={(e) => handleCustomExercise('category', e.target.value)}
+              >
+                <option value="quads">quads</option>
+                <option value="hamstrings">hamstrings</option>
+                <option value="calves">calves</option>
+                <option value="glutes">glutes</option>
+                <option value="biceps">biceps</option>
+                <option value="triceps">triceps</option>
+                <option value="forearms">forearms</option>
+                <option value="chest">chest</option>
+                <option value="shoulders">shoulders</option>
+                <option value="upper-back">upper Back</option>
+                <option value="lower-back">lower Back</option>
+                <option value="lats">lats</option>
+                <option value="abs">abs</option>
+              </select>
+            </div>
+            <div className="flex flex-row gap-3 mt-5">
+              <button
+                onClick={addCustomExercise}
+                className="px-2 py-1 border border-black rounded-lg bg-alloy-orange"
+                type="submit"
+              >
+                Submit
+              </button>
+              <button
+                onClick={() => setToggleModal(false)}
+                className="px-2 py-1 border border-black rounded-lg bg-red-600"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        )}
       </div>
     </>
   );

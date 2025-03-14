@@ -2,6 +2,7 @@
 const { ObjectId } = require("mongodb");
 const Workouts = require('../models/Workouts');
 const PersonalRecord = require('../models/PersonalRecords');
+const ExerciseList = require('../models/ExerciseList');
 
 module.exports = {
     getProfile: async (req, res) => {
@@ -219,6 +220,30 @@ module.exports = {
         } catch (err) {
             console.error("Error updating workout", err);
             res.status(500).json({ message: "Server Error" });
+        }
+    },
+    postCustomExercise: async (req, res) => {
+        try {
+            console.log(req.body)
+
+            const { name, category } = req.body
+
+            // Check if the exercise exists already in the exercise list
+            let existingExercise = await ExerciseList.findOne({ name })
+
+            if(existingExercise) {
+                return res.status(400).json({ message: 'This exercise already exists'})
+            }
+
+            const newExercise = await ExerciseList.create({ name, category })
+            
+
+            res.status(200).json({ message: "Exercise added successfully", newExercise });
+
+
+        } catch (err) {
+            console.error("Error adding exercise", err);
+            res.status(500).json({ message: "Server Error" })
         }
     },
 };

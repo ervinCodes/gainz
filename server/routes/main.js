@@ -17,6 +17,7 @@ router.get("/getWorkout/:id", ensureAuth, postsController.getSingleWorkout)
 router.delete("/:id", ensureAuth, postsController.deleteWorkout)
 router.put("/updateExercises/:id", ensureAuth, postsController.updateExercises)
 router.get("/exerciseList", ensureAuth, homeController.getExerciseList);
+router.post("/addCustomExercise", ensureAuth, postsController.postCustomExercise)
 
 
 module.exports = router;

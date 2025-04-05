@@ -9,6 +9,7 @@ export default function StartWorkout() {
 
     const [workout, setWorkout] = useState(null);
     const [error, setError] = useState('');
+    const [lastWorkout, setLastWorkout] = useState(null); // State to store the last exercise
 
     useEffect(() => {
         async function fetchWorkout() {
@@ -26,6 +27,9 @@ export default function StartWorkout() {
                 // console.log('User workout', data); 
 
                 setWorkout(data.workout)
+                setLastWorkout(data.lastWorkout) // Set the last workout data
+
+                console.log('Last workout data:', data) // Log the last workout data
 
             } catch (err) {
                 console.error('Error fetching workouts', err)
@@ -38,7 +42,7 @@ export default function StartWorkout() {
 
     }, [id])
 
-    // Handles changes to each set
+    // Function that handles changes to each set
     function handleSetChange(exerciseIndex, setIndex, field, value) {
         setWorkout((prevWorkout) => {
             const updatedExercises = prevWorkout.exercises.map((exercise, eIndex) => {
@@ -57,7 +61,7 @@ export default function StartWorkout() {
         });
     };
 
-    // Handles the submittion of a complete set
+    // Function to handle submitting a workout
     async function handleSubmit() {
         // CEnsure we're working with the latest state
         const allChecked = workout.exercises.every(exercise => exercise.sets.every(set => set.isChecked))
@@ -67,17 +71,34 @@ export default function StartWorkout() {
             return; // Prevents submission
         }
 
-        const workoutData = {
-            exercises: workout.exercises.map(exercise => ({
-                name: exercise.name,
-                sets: exercise.sets.map(set => ({
+        const exerciseData = workout.exercises.map(exercise => ({
+            name: exercise.name,
+            sets: exercise.sets.map(set => ({
+                setNumber: set.setNumber,
+                reps: set.reps,
+                weight: set.weight,
+                isChecked: false, // Reset for next time
+            }))
+        }));
+
+        // Generate last recorded workout data
+        const lastWorkoutData = workout.exercises.reduce((acc, exercise) => {
+            const completedSets = exercise.sets.filter(set => set.isChecked);
+            if(completedSets.length > 0) {
+                acc[exercise.name] = completedSets.map(set => ({
                     setNumber: set.setNumber,
                     reps: set.reps,
                     weight: set.weight,
-                    isChecked: false,
-                }))
-            }))
+                }));
+            }
+            return acc;
+        }, {});
+
+        const workoutData = {
+            exercises: exerciseData,
+            lastWorkout: lastWorkoutData,
         }
+        
 
         console.log('Workout Data being sent to server:', workoutData)
             
@@ -164,6 +185,18 @@ export default function StartWorkout() {
                                 <div className="flex flex-row items-end gap-5">
                                     <div className='text-2xl font-semibold'>{exercise.name}</div>
                                     <div className='font-thin'>top set: {exercise.personalRecord}</div>
+                                    <div className="relative group">
+                                    <div className="cursor-pointer">
+                                        last set: {lastWorkout?.[exercise.name]?.[0]?.reps || 0} reps @ {lastWorkout?.[exercise.name]?.[0]?.weight || 0} lbs
+                                    </div>
+                                    <div className="absolute left-0 mt-2 w-40 bg-gray-800 text-white text-sm p-2 rounded-lg shadow-md opacity-0 group-hover:opacity-100 transition-opacity">
+                                        {lastWorkout?.[exercise.name]?.map((set, index) => (
+                                            <div key={index}>
+                                                {set.reps} reps @ {set.weight} lbs
+                                            </div>
+                                        ))}
+                                    </div>
+                                    </div>
                                 </div>
                                 
                                 <div className='flex flex-row justify-center items-center gap-20'>

@@ -130,7 +130,28 @@ module.exports = {
                 return res.status(404).json({ message: 'Workout not found' })
             }
 
-            res.status(200).json({ workout: userSingleWorkout })
+            // Ensure exercise exists in the workout
+            const exerciseNames = userSingleWorkout.exercises.map(exercise => exercise.name);
+
+            // Find the last workout for the same exericise in the workout
+            const lastWorkoutRecords = await PersonalRecord.find({
+                userId: userId,
+                exerciseName: { $in: exerciseNames } // Filter by exercise names
+            })
+
+            // Filter to only include relevant exercises
+            const lastWorkoutLookup = lastWorkoutRecords.reduce((acc, record) => {
+                acc[record.exerciseName] = record.lastWorkout || null;
+                return acc;
+            }, {});
+
+            // Attach last workout data to response
+            const enrichedExercises = userSingleWorkout.exercises.map(exercise => ({
+                ...exercise.toObject(), // Convert Mongoose document to plain object
+                lastWorkout: lastWorkoutLookup[exercise.name] || null // Attach last workout data
+            }));
+
+            res.status(200).json({ workout: { ...userSingleWorkout.toObject(), lastWorkout: enrichedExercises } })
 
         } catch (err) {
             console.error('Error fetching workouts', err)
@@ -157,6 +178,7 @@ module.exports = {
             const userId = req.user?.id;
             const workoutId = req.params.id;
             const exercises = req.body.exercises;
+            const lastWorkout = req.body.lastWorkout || {};
     
             if (!userId) {
                 return res.status(401).json({ message: "Unauthorized" });
@@ -174,7 +196,9 @@ module.exports = {
                 const maxWeight = Math.max(...sets.map(set => set.weight || 0))
 
                 console.log('Max Weight:', maxWeight)
-    
+
+                const lastWorkoutSets = lastWorkout[name] || [];
+
                 // Check if a personal record for this exercise exists
                 let existingRecord = await PersonalRecord.findOne({ userId, exerciseName: name });
     
@@ -183,8 +207,31 @@ module.exports = {
                         // Update the PR only if the new weight is higher
                         existingRecord = await PersonalRecord.findOneAndUpdate(
                             { userId, exerciseName: name },
-                            { $set: { topSet: maxWeight } },
+                            { 
+                                $set: { 
+                                    topSet: maxWeight,
+                                    dateAchieved: new Date(),
+                                    lastWorkout: {
+                                        sets: lastWorkoutSets,
+                                        date: new Date()
+                                    }
+                                } 
+                            },
                             { new: true, returnDocument: "after" }
+                        );
+                } else {
+                    // No new PR, but update lastWorkout only
+                    existingRecord = await PersonalRecord.findOneAndUpdate(
+                        { userId, exerciseName: name },
+                        { 
+                            $set: { 
+                                lastWorkout: {
+                                    sets: lastWorkoutSets,
+                                    date: new Date()
+                                }
+                            } 
+                        },
+                        { new: true, returnDocument: "after" }
                         );
                     }
                 } else {
@@ -193,6 +240,11 @@ module.exports = {
                         userId,
                         exerciseName: name,
                         topSet: maxWeight,
+                        dateAchieved: new Date(),
+                        lastWorkout: {
+                            sets: lastWorkoutSets,
+                            date: new Date()
+                        }
                     });
                 }
     
@@ -251,4 +303,5 @@ module.exports = {
 
 
 // TODO
-// For some reason, when trying to execute /getExerciseList, it runds /getSingleWorkout.  Find out why . 
+// Now I need to pull the lastWorkout for each exercise in the workout and add it to the response.
+// This will be used to display the last workout data in the front-end.

@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const { SetSchema } = require('./Workouts');
 
 const PersonalRecordSchema = new mongoose.Schema({
     userId: {
@@ -17,6 +18,10 @@ const PersonalRecordSchema = new mongoose.Schema({
     dateAchieved: {
         type: Date,
         default: Date.now
+    },
+    lastWorkout: {
+        sets: { type: [SetSchema], default: [] },
+        date: { type: Date, default: null }
     }
 });
 

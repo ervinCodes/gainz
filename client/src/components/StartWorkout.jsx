@@ -27,9 +27,8 @@ export default function StartWorkout() {
                 // console.log('User workout', data); 
 
                 setWorkout(data.workout)
-                setLastWorkout(data.lastWorkout) // Set the last workout data
 
-                console.log('Last workout data:', data) // Log the last workout data
+                console.log('Workout data:', data) // Log the last workout data
 
             } catch (err) {
                 console.error('Error fetching workouts', err)
@@ -179,23 +178,36 @@ export default function StartWorkout() {
                 
                 {workout && (
                     <div className='text-white flex flex-col justify-center items-center space-y-10'>
+                        {/* Workout Title */}
                         <div className='text-5xl font-bold text-alloy-orange mb-5'>{workout.title}</div>
                         {workout.exercises.map((exercise, exerciseIndex) => (
                             <div key={exerciseIndex} className='flex flex-col justify-center items-center space-y-8'>
                                 <div className="flex flex-row items-end gap-5">
+                                    {/* Exercise Name */}
                                     <div className='text-2xl font-semibold'>{exercise.name}</div>
+                                    {/* Personal Record */}
                                     <div className='font-thin'>top set: {exercise.personalRecord}</div>
-                                    <div className="relative group">
-                                    <div className="cursor-pointer">
-                                        last set: {lastWorkout?.[exercise.name]?.[0]?.reps || 0} reps @ {lastWorkout?.[exercise.name]?.[0]?.weight || 0} lbs
-                                    </div>
-                                    <div className="absolute left-0 mt-2 w-40 bg-gray-800 text-white text-sm p-2 rounded-lg shadow-md opacity-0 group-hover:opacity-100 transition-opacity">
-                                        {lastWorkout?.[exercise.name]?.map((set, index) => (
-                                            <div key={index}>
-                                                {set.reps} reps @ {set.weight} lbs
+                                    {/* Last Workout */}
+                                    {(() => {
+                                        const matchedLast = workout.lastExercise?.find(last => last.name === exercise.name);
+                                        return matchedLast && (
+                                            <div className="relative group">
+                                                <div className="text-sm text-gray-400 cursor-pointer">
+                                                    🕒 last recorded
+                                                </div>
+                                                <div className='absolute left-0 mt-2 w-40 bg-gray-800 text-white text-xs rounded-lg p-3 shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10'>
+                                                    {matchedLast.sets.map((set, i) => (
+                                                        <div key={i}>
+                                                            Set {set.setNumber}: {set.reps} reps x {set.weight} lbs
+                                                        </div>
+                                                    ))}
+                                                </div>
                                             </div>
-                                        ))}
-                                    </div>
+                                            
+                                        )
+                                    })()}
+                                    <div className="relative group">
+
                                     </div>
                                 </div>
                                 

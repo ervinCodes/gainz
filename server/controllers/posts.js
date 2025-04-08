@@ -151,7 +151,7 @@ module.exports = {
                 lastWorkout: lastWorkoutLookup[exercise.name] || null // Attach last workout data
             }));
 
-            res.status(200).json({ workout: { ...userSingleWorkout.toObject(), lastWorkout: enrichedExercises } })
+            res.status(200).json({ workout: { ...userSingleWorkout.toObject(), lastExercise: enrichedExercises } })
 
         } catch (err) {
             console.error('Error fetching workouts', err)

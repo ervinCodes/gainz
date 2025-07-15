@@ -200,9 +200,14 @@ export default function CreateWorkout() {
       }
 
       const result = await response.json();
+
       console.log("Custom exercise saved successfully!", result)
 
-      setSuccessMessage('Custom exercise added successfully!')
+      setTimeout(() => {
+        setSuccessMessage('Custom exercise added successfully!')
+      }, 5000)
+
+      setExerciseList((prev) => [...prev, customExerciseData]) // Update exercise list with new custom exercise
 
       // Reset form
       setCustomExercise([{ name: '', category: ''}])

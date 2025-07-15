@@ -303,5 +303,4 @@ module.exports = {
 
 
 // TODO
-// Now I need to pull the lastWorkout for each exercise in the workout and add it to the response.
-// This will be used to display the last workout data in the front-end.
+// Last recorded data is not showing up on the UI , fix this

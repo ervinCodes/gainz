@@ -179,24 +179,27 @@ export default function StartWorkout() {
                 {workout && (
                     <div className='text-white flex flex-col justify-center items-center space-y-10'>
                         {/* Workout Title */}
-                        <div className='text-5xl font-bold text-alloy-orange mb-5'>{workout.title}</div>
+                        <div className='sm:text-5xl text-2xl font-bold text-alloy-orange mb-5 text-center'>{workout.title}</div>
                         {workout.exercises.map((exercise, exerciseIndex) => (
                             <div key={exerciseIndex} className='flex flex-col justify-center items-center space-y-8'>
-                                <div className="flex flex-row items-end gap-5">
+                                <div className="flex sm:flex-row flex-col sm:items-end items-center justify-center gap-1 sm:gap-5">
+
                                     {/* Exercise Name */}
                                     <div className='text-2xl font-semibold'>{exercise.name}</div>
+                
                                     {/* Personal Record */}
-                                    <div className='font-thin'>top set: {exercise.personalRecord}</div>
+                                    <div className='text-sm font-thin'>top set: {exercise.personalRecord}</div>
+
                                     {/* Last Workout */}
                                     {(() => {
-                                        const matchedLast = workout.lastExercise?.find(last => last.name === exercise.name);
-                                        return matchedLast && (
+                                        const matchedLast = workout.lastExercise?.find(last => last.name.toLowerCase() === exercise.name.toLowerCase());
+                                        return matchedLast?.lastWorkout?.sets && (
                                             <div className="relative group">
-                                                <div className="text-sm text-gray-400 cursor-pointer">
-                                                    🕒 last recorded
+                                                <div className="text-sm font-thin cursor-pointer">
+                                                    last recorded 🕒
                                                 </div>
-                                                <div className='absolute left-0 mt-2 w-40 bg-gray-800 text-white text-xs rounded-lg p-3 shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10'>
-                                                    {matchedLast.sets.map((set, i) => (
+                                                <div className='absolute right-0 mt-2 w-40 bg-gray-800 text-white text-xs rounded-lg p-3 shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10'>
+                                                    {matchedLast.lastWorkout.sets.map((set, i) => (
                                                         <div key={i}>
                                                             Set {set.setNumber}: {set.reps} reps x {set.weight} lbs
                                                         </div>
@@ -206,16 +209,13 @@ export default function StartWorkout() {
                                             
                                         )
                                     })()}
-                                    <div className="relative group">
-
-                                    </div>
                                 </div>
                                 
                                 <div className='flex flex-row justify-center items-center gap-20'>
                                     <div className='flex flex-col gap-5'>
                                     {exercise.sets.map((set, setIndex) => (
                                         // Set Container
-                                        <div key={setIndex} className='flex flex-row lg:gap-28 gap-20 mx-10'>
+                                        <div key={setIndex} className='flex flex-row lg:gap-28 gap-20 mx-3'>
                                             
                                             {/* Sets */}
                                             <div className="flex flex-col items-center gap-2">

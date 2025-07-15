@@ -376,19 +376,20 @@ export default function CreateWorkout() {
                 id="exercise-name"
                 onChange={(e) => handleCustomExercise('category', e.target.value)}
               >
-                <option value="quads">quads</option>
-                <option value="hamstrings">hamstrings</option>
-                <option value="calves">calves</option>
-                <option value="glutes">glutes</option>
-                <option value="biceps">biceps</option>
-                <option value="triceps">triceps</option>
-                <option value="forearms">forearms</option>
-                <option value="chest">chest</option>
-                <option value="shoulders">shoulders</option>
-                <option value="upper-back">upper Back</option>
-                <option value="lower-back">lower Back</option>
-                <option value="lats">lats</option>
                 <option value="abs">abs</option>
+                <option value="biceps">biceps</option>
+                <option value="calves">calves</option>
+                <option value="chest">chest</option>
+                <option value="forearms">forearms</option>
+                <option value="glutes">glutes</option>
+                <option value="hamstrings">hamstrings</option>
+                <option value="lats">lats</option>
+                <option value="lower-back">lower Back</option>
+                <option value="shoulders">shoulders</option>
+                <option value="triceps">triceps</option>
+                <option value="upper-back">upper Back</option>
+                <option value="quads">quads</option>
+                
               </select>
             </div>
             <div className="flex flex-row gap-3 mt-5">

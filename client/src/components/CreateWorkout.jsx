@@ -220,14 +220,14 @@ export default function CreateWorkout() {
   console.log('Custom Exercise', customExercise)
 
   if (loading) {
-    return <div className="text-white">Loading...</div>;
+    return <div className="text-white text-center">Loading...</div>;
   }
 
   return (
     <>
       <div className="flex flex-col justify-center items-center space-y-4 relative">
         {/* Displays error if one exists */}
-        {error && <div className="text-red-600 font-bold">{error}</div>}
+        {error && <div className="text-red-600 font-bold text-center">{error}</div>}
 
         <input
           type="text"
@@ -255,7 +255,7 @@ export default function CreateWorkout() {
                   className="border border-gray-400 px-2 py-1 rounded"
                 >
                   <option>Select a Category</option>
-                  {categories.map((category, index) => (
+                  {[...categories].sort((a, b) => a.localeCompare(b)).map((category, index) => (
                     <option key={index} value={category}>
                       {category}
                     </option>
@@ -284,6 +284,7 @@ export default function CreateWorkout() {
                   <option>Select Exercise</option>
                   {exerciseList
                     .filter((ex) => ex.category === exercise.category)
+                    .sort((a, b) => a.name.localeCompare(b.name))
                     .map((ex, index) => (
                       <option key={index} value={ex.name}>
                         {ex.name}

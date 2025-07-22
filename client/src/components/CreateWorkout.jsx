@@ -20,6 +20,14 @@ export default function CreateWorkout() {
   const [toggleModal, setToggleModal] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
 
+  function capitalizeWords(str) {
+    return str
+      .toLowerCase()
+      .split(' ')
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(' ');
+  }
+
   // Fetches data from the server with credentials and retrieves username and email
   useEffect(() => {
     fetch(`${appUrl}/profile`, {
@@ -177,8 +185,8 @@ export default function CreateWorkout() {
 
       // Payload
       const customExerciseData = {
-        name: customExercise[0].name,
-        category: customExercise[0].category,
+        name: capitalizeWords(customExercise[0].name),
+        category: capitalizeWords(customExercise[0].category),
       }
 
       console.log('Custom Exercise Data', customExerciseData)
@@ -211,6 +219,7 @@ export default function CreateWorkout() {
 
       // Reset form
       setCustomExercise([{ name: '', category: ''}])
+      setSuccessMessage('');
 
     } catch(error) {
       console.error('Error:', error)
@@ -344,71 +353,74 @@ export default function CreateWorkout() {
 
         {/* Modal */}
         {toggleModal && (
-          <div className="flex flex-col items-center border bg-space-cadet border-black w-96 h-auto rounded-lg p-3 gap-1 absolute shadow-2xl">
-                {/* Close Button */}
-            <button
-              onClick={() => setToggleModal(false)}
-              className="absolute top-2 right-2 text-white text-xs font-bold w-6 h-6 rounded-full flex items-center justify-center">
-              x
-            </button>
-            {successMessage && <div className="text-green-600 font-bold">{successMessage}</div>}
-            <div className="text-2xl font-semibold text-white mb-3">
-              Add Custom Exercise
-            </div>
-            <div className="flex flex-row gap-4 w-full justify-between">
-              <label htmlFor="exercise-name" className="text-white">
-                Exercise Name
-              </label>
-              <input
-                type="text"
-                className="border border-black rounded text-center"
-                placeholder="e.g squats"
-                id="exercise-name"
-                onChange={(e) => handleCustomExercise("name", e.target.value)}
-              />
-            </div>
-            <div className="flex flex-row gap-4 w-full justify-between">
-              <label htmlFor="exercise-name" className="text-white">
-                Category
-              </label>
-              <select
-                type="text"
-                className="border border-black rounded w-44 text-center"
-                id="exercise-name"
-                onChange={(e) => handleCustomExercise('category', e.target.value)}
-              >
-                <option value="abs">abs</option>
-                <option value="biceps">biceps</option>
-                <option value="calves">calves</option>
-                <option value="chest">chest</option>
-                <option value="forearms">forearms</option>
-                <option value="glutes">glutes</option>
-                <option value="hamstrings">hamstrings</option>
-                <option value="lats">lats</option>
-                <option value="lower-back">lower Back</option>
-                <option value="shoulders">shoulders</option>
-                <option value="triceps">triceps</option>
-                <option value="upper-back">upper Back</option>
-                <option value="quads">quads</option>
-                
-              </select>
-            </div>
-            <div className="flex flex-row gap-3 mt-5">
-              <button
-                onClick={addCustomExercise}
-                className="px-2 py-1 border border-black rounded-lg bg-alloy-orange"
-                type="submit"
-              >
-                Submit
-              </button>
+          <div className="fixed inset-0 bg-black bg-opacity-60 flex justify-center items-center z-50">
+            <div className="flex flex-col items-center border bg-space-cadet border-black w-96 h-auto rounded-lg p-3 gap-1 absolute shadow-2xl">
+                  {/* Close Button */}
               <button
                 onClick={() => setToggleModal(false)}
-                className="px-2 py-1 border border-black rounded-lg bg-red-600"
-              >
-                Cancel
+                className="absolute top-2 right-2 text-white text-xs font-bold w-6 h-6 rounded-full flex items-center justify-center">
+                x
               </button>
+              {successMessage && <div className="text-green-600 font-bold">{successMessage}</div>}
+              <div className="text-2xl font-semibold text-white mb-3">
+                Add Custom Exercise
+              </div>
+              <div className="flex flex-row gap-4 w-full justify-between">
+                <label htmlFor="exercise-name" className="text-white">
+                  Exercise Name
+                </label>
+                <input
+                  type="text"
+                  className="border border-black rounded text-center"
+                  placeholder="e.g squats"
+                  id="exercise-name"
+                  onChange={(e) => handleCustomExercise("name", e.target.value)}
+                />
+              </div>
+              <div className="flex flex-row gap-4 w-full justify-between">
+                <label htmlFor="exercise-name" className="text-white">
+                  Category
+                </label>
+                <select
+                  type="text"
+                  className="border border-black rounded w-44 text-center"
+                  id="exercise-name"
+                  onChange={(e) => handleCustomExercise('category', e.target.value)}
+                >
+                  <option value="abs">abs</option>
+                  <option value="biceps">biceps</option>
+                  <option value="calves">calves</option>
+                  <option value="chest">chest</option>
+                  <option value="forearms">forearms</option>
+                  <option value="glutes">glutes</option>
+                  <option value="hamstrings">hamstrings</option>
+                  <option value="lats">lats</option>
+                  <option value="lower-back">lower Back</option>
+                  <option value="shoulders">shoulders</option>
+                  <option value="triceps">triceps</option>
+                  <option value="upper-back">upper Back</option>
+                  <option value="quads">quads</option>
+                  
+                </select>
+              </div>
+              <div className="flex flex-row gap-3 mt-5">
+                <button
+                  onClick={addCustomExercise}
+                  className="px-2 py-1 border border-black rounded-lg bg-alloy-orange"
+                  type="submit"
+                >
+                  Submit
+                </button>
+                <button
+                  onClick={() => setToggleModal(false)}
+                  className="px-2 py-1 border border-black rounded-lg bg-red-600"
+                >
+                  Cancel
+                </button>
+              </div>
             </div>
           </div>
+            
         )}
       </div>
     </>

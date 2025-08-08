@@ -10,6 +10,8 @@ export default function StartWorkout() {
     const [workout, setWorkout] = useState(null);
     const [error, setError] = useState('');
     const [lastWorkout, setLastWorkout] = useState(null); // State to store the last exercise
+    const [isAddingExercise, setIsAddingExercise] = useState(false);
+    const [newExercise, setNewExercise] = useState ({ name: '', sets: [], category: '' })
 
     useEffect(() => {
         async function fetchWorkout() {
@@ -198,7 +200,7 @@ export default function StartWorkout() {
                                                 <div className="text-sm font-thin cursor-pointer">
                                                     last recorded 🕒
                                                 </div>
-                                                <div className='absolute right-0 mt-2 w-40 bg-gray-800 text-white text-xs rounded-lg p-3 shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10'>
+                                                <div className='absolute -top-20 left-0 mt-2 w-40 bg-gray-800 text-white text-xs rounded-lg p-3 shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10'>
                                                     {matchedLast.lastWorkout.sets.map((set, i) => (
                                                         <div key={i}>
                                                             Set {set.setNumber}: {set.reps} reps x {set.weight} lbs
@@ -286,6 +288,11 @@ export default function StartWorkout() {
                         ))}
                     </div>
                 )}
+                {/* Adding New Exercise */}
+                <button className="bg-alloy-orange text-white py-2 px-4 rounded">
+                    + add exercise
+                </button>
+                {/* Submitting Workout */}
                 <button
                 onClick={handleSubmit}
                 className="bg-green-500 text-white px-4 py-2 rounded"
